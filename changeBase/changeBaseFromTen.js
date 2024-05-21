@@ -8,7 +8,8 @@ function changeBase (input, base, max) {
     var remainder = input; 
     for (var i=rep-1; i > -max; i--) {
         var num = base ** (i); 
-        result = result + remap[Math.floor(remainder/num)]; 
+        var tempNum = remap[Math.floor(remainder/num)];
+        result = result + tempNum; 
         remainder = Math.round((remainder % num)*(10**max))/(10**max);
         if (remainder == 0 && i == 0) {
             return result
