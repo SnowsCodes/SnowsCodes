@@ -95,6 +95,12 @@ function genFromRow (num) {
         }
     }
     
+    //if there is only one value left in unfiltered, set that as the value
+    //CHECK IF THIS WORKS
+    if (unfiltered.length == 1) {
+        rows[rowNum][columnNum] = unfiltered[0]; 
+    }
+    
     //change all elements in unfiltered into a string and add it all together
     var tempString = ""; 
     if (rows[rowNum][columnNum] == 0) {
