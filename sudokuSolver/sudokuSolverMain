@@ -12,15 +12,16 @@
     
     var rows = [row1, row2, row3, row4, row5, row6, row7, row8, row9];
     
-    var pos1 = []; 
-    var pos2 = []; 
-    var pos3 = []; 
-    var pos4 = []; 
-    var pos5 = []; 
-    var pos6 = []; 
-    var pos7 = []; 
-    var pos8 = []; 
-    var pos9 = []; 
+    var pos1 = ["", "", "", "", "", "", "", "", ""]; 
+    var pos2 = ["", "", "", "", "", "", "", "", ""]; 
+    var pos3 = ["", "", "", "", "", "", "", "", ""]; 
+    var pos4 = ["", "", "", "", "", "", "", "", ""]; 
+    var pos5 = ["", "", "", "", "", "", "", "", ""]; 
+    var pos6 = ["", "", "", "", "", "", "", "", ""]; 
+    var pos7 = ["", "", "", "", "", "", "", "", ""]; 
+    var pos8 = ["", "", "", "", "", "", "", "", ""]; 
+    var pos9 = ["", "", "", "", "", "", "", "", ""]; 
+    var possibilities = [pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8, pos9];
 }
 
 //to make my life easier
@@ -47,7 +48,7 @@ function genFromRow (num) {
     var rowNum = Math.floor(num/9); 
     var columnNum = (num % 9); 
     var boxNum = (3 * Math.floor(rowNum/3)) + Math.floor(columnNum/3); 
-    console.log("num is at " + rowNum + ", " + columnNum + ", " + boxNum);
+    //console.log("num is at " + rowNum + ", " + columnNum + ", " + boxNum);
     
     
     //remove duplicates from the row it is in, which is rows[rowNum]
@@ -82,12 +83,35 @@ function genFromRow (num) {
     }
     
     //check for each coord
+    for (var i = 0; i < boxRowNum.length; i++) {
+        if (rows[boxRowNum[i]][boxColumnNum[i]] != 0) {
+            //find the index of rows[i][columnNum] in unfiltered, and store it in index, and if the target doesn't exist, set index as -1
+            var index = unfiltered.indexOf(rows[boxRowNum[i]][boxColumnNum[i]]); 
+            
+            //if index is more than -1, remove one element at the index of the variable index 
+            if (index > -1) {
+                unfiltered.splice(index, 1);
+            }
+        }
+    }
     
+    //change all elements in unfiltered into a string and add it all together
+    var tempString = ""; 
+    if (rows[rowNum][columnNum] == 0) {
+        for (var i = 0; i < unfiltered.length; i++) {
+            tempString += unfiltered[i]; 
+        }
+    }
+    //console.log("tempString is " + tempString); 
+    
+    possibilities[rowNum][columnNum] = tempString; 
     
 }
 
-genFromRow(0); 
-
+for(var i = 0; i < 80; i++) {
+    genFromRow(i); 
+}
+console.log(possibilities); 
 
 
 
