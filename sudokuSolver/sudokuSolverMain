@@ -114,11 +114,22 @@ function genFromRow (num) {
     
 }
 
-for(var i = 0; i < 80; i++) {
-    genFromRow(i); 
+function mainRep () {
+    for(var i = 0; i < 80; i++) {
+        var numOfRow = Math.floor(i/9); 
+        var numOfColumn = (i%9); 
+        if (rows[numOfRow][numOfColumn] == 0) {
+            genFromRow(i); 
+        }
+    }
 }
-console.log(possibilities); 
 
-
+var complete = false; 
+var counter = 0; 
+while (!complete && counter < 51) {
+    mainRep(); 
+    counter++; 
+}
+console.log(rows); 
 
 
