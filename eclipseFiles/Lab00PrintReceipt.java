@@ -1,6 +1,5 @@
 package lab00;
 
-
 /* Purpose of this program:
  * This program takes as input the number of items that were bought for five
  * different types of items and prints a receipt for all the items bought,
@@ -80,11 +79,11 @@ public class Lab00PrintReceipt {
 	    System.out.printf("%1$4s    %2$-32s%3$20s%4$20s%n", "==", "===========", "==========", "===========");
 		
 		// Print the quantity, description, unit price, and total price for each type of item purchased
-	    System.out.printf("%1$4d    %2$-32s%3$20.2f%4$20.2f%n", qtyTV, TV, UP_TV, tpTV); // TVs
-	    System.out.printf("%1$4d    %2$-32s%3$20.2f%4$20.2f%n", qtyVCR, VCR, UP_VCR, tpVCR); // VCRs
-	    System.out.printf("%1$4d    %2$-32s%3$20.2f%4$20.2f%n", qtyRC, RC, UP_RC, tpRC); // Remote Controllers
-	    System.out.printf("%1$4d    %2$-32s%3$20.2f%4$20.2f%n", qtyCDP, CDP, UP_CDP, tpCDP); // CD Players
-	    System.out.printf("%1$4d    %2$-32s%3$20.2f%4$20.2f%n", qtyTR, TR, UP_TR, tpTR); // Tape Recorders
+	    System.out.printf("%1$4d    %2$-32s%3$,20.2f%4$,20.2f%n", qtyTV, TV, UP_TV, tpTV); // TVs
+	    System.out.printf("%1$4d    %2$-32s%3$,20.2f%4$,20.2f%n", qtyVCR, VCR, UP_VCR, tpVCR); // VCRs
+	    System.out.printf("%1$4d    %2$-32s%3$,20.2f%4$,20.2f%n", qtyRC, RC, UP_RC, tpRC); // Remote Controllers
+	    System.out.printf("%1$4d    %2$-32s%3$,20.2f%4$,20.2f%n", qtyCDP, CDP, UP_CDP, tpCDP); // CD Players
+	    System.out.printf("%1$4d    %2$-32s%3$,20.2f%4$,20.2f%n", qtyTR, TR, UP_TR, tpTR); // Tape Recorders
 
 		System.out.printf("%n"); // Create some white space between the list of items and the totals.
 
@@ -93,24 +92,24 @@ public class Lab00PrintReceipt {
 	    double subTotal = tpTV + tpVCR + tpRC + tpCDP + tpTR;
 
 		// Print the sub total.
-	    System.out.printf("%1$10s%2$50s%3$20.2f%n", "", "SUBTOTAL", subTotal);
+	    System.out.printf("%1$10s%2$50s%3$,20.2f%n", "", "SUBTOTAL", subTotal);
 		
 		// Declare a variable to hold the tax incurred, and set its value to be
 		// the product of the sub total and the tax rate (in decimal).
 	    double tax = subTotal*0.0825;
 
 		// Print the tax on the sub total (also inform the customer about the tax rate percent).
-	    System.out.printf("%1$10s%2$50s%3$20.2f%n", "", "TAX @ 8.75%", tax);
+	    System.out.printf("%1$10s%2$50s%3$,20.2f%n", "", "TAX @ 8.75%", tax);
 
 		// ALTERNATE PRINT STATEMENT WITHOUT SHOWING THE TAX RATE PERCENT -- commented out
-	    System.out.printf("%1$10s%2$50s%3$20.2f%n", "", "TAX", tax);
+	    System.out.printf("%1$10s%2$50s%3$,20.2f%n", "", "TAX", tax);
 
 		// Declare a variable to hold the total amount after tax,
 		// and set its value to be the sum of the sub total and the tax.
 	    double total = subTotal + tax;
 		
 		// Print the total amount
-	    System.out.printf("%1$10s%2$50s%3$20.2f%n", "", "TOTAL", total);
+	    System.out.printf("%1$10s%2$50s%3$,20.2f%n", "", "TOTAL", total);
 	}	
 }
 
