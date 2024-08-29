@@ -40,6 +40,13 @@
 }
 
 //stands for generate all possibilies of a value
+
+function genCoords (index) {
+    var numOfRow = Math.floor(index/9); 
+    var numOfColumn = (index%9); 
+    return [numOfRow, numOfColumn]
+}
+
 function genFromRow (num) {
     //create an array to store unfiltered possibilities
     var unfiltered = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -115,7 +122,7 @@ function genFromRow (num) {
 }
 
 function mainRep () {
-    for(var i = 0; i < 80; i++) {
+    for(var i = 0; i < 81; i++) {
         var numOfRow = Math.floor(i/9); 
         var numOfColumn = (i%9); 
         if (rows[numOfRow][numOfColumn] == 0) {
@@ -126,10 +133,29 @@ function mainRep () {
 
 var complete = false; 
 var counter = 0; 
-while (!complete && counter < 51) {
+while (!complete && counter < 52) {
     mainRep(); 
     counter++; 
 }
-console.log(rows); 
 
+if (!complete) {
+    var unsolved = []; 
+    for (var i = 0; i < 81; i++) {
+        var numOfRow = Math.floor(i/9); 
+        var numOfColumn = (i%9); 
+        if (rows[numOfRow][numOfColumn] == 0) {
+            unsolved.push(i); 
+        }
+    }
+}
+console.log("unsolved ones are " + unsolved)
+var visualize = ""; 
+for (var i = 0; i < 81; i++) {
+    visualize += rows[genCoords(i)[0]][genCoords(i)[1]];
+    if (visualize.length > 8) {
+        console.log(visualize);
+        var visualize = ""; 
+    }
+}
+console.log(rows); 
 
