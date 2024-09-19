@@ -1,8 +1,9 @@
 //the intervals you want to merge :)
-var intervals = [[1, 2], [3, 4], [1, 4]]; 
+var intervals = [[0, 1], [2, 3], [4, 5], [6, 7], [-1, 9]]; 
 var length = intervals.length; 
 
 function merge (a1, a2) {
+    console.log(a1 + "    " + a2); 
     if (a1[0] <= a2[0] && a1[1] >= a2[0]) {
         if (a1[0] <= a2[1] && a1[1] >= a2[1]) {
             return a1; 
@@ -11,6 +12,14 @@ function merge (a1, a2) {
         }
     } else if (a1[0] <= a2[1] && a1[1] >= a2[1]) {
         return [a2[0], a1[1]]; 
+    } else if (a2[0] <= a1[0] && a2[1] >= a1[0]) {
+        if (a2[0] <= a1[1] && a2[1] >= a1[1]) {
+            return a2; 
+        } else {
+            return [a2[0], a1[1]];
+        }
+    } else if (a2[0] <= a1[1] && a2[1] >= a1[1]) {
+        return [a1[0], a2[1]]; 
     } else {
         return [a1, a2, 0];
     }
@@ -37,13 +46,8 @@ function repeat (array) {
     }
     
     for (var i = 0; i < index.length; i++) {
-        console.log(i); 
         var temp = merge(intervals[index[i][0]], intervals[index[i][1]]); 
-        console.log (intervals[index[i][0]] + "   " + intervals[index[i][1]]);
-        console.log("temp length is: ");
-        console.log(temp.length); 
         if (temp.length == 2) {
-            console.log("ran this"); 
             array.splice(index[i][1], 1); 
             array.splice(index[i][0], 1); 
             array.push(temp); 
@@ -56,19 +60,24 @@ function repeat (array) {
 }
 
 var result; 
-
 if (length == 2) {
-    result = merge(intervals[0], intervals[1]); 
+    result = merge(intervals[0], intervals[1]);
+    if (result[result.length-1] == 0) {
+        result.splice (result.length-1, 1); 
+    }
 } else if (length > 2) {
     var tempResult = repeat(intervals); 
-    console.log(tempResult); 
     while (tempResult[1] && tempResult[0].length > 1) {
         var tempResult = repeat(intervals); 
-        console.log(tempResult);
     }
     result = tempResult[0]; 
 } else {
     result = intervals; 
 }
 
-console.log(result[0]); 
+if (result.length == 1) {
+    console.log(result[0]);
+} else {
+    console.log(result); 
+}
+
