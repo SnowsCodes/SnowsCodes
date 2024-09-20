@@ -1,9 +1,7 @@
-//the intervals you want to merge :)
-var intervals = [[0, 1], [2, 3], [4, 5], [6, 7], [-1, 9]]; 
+var intervals = [[5, 5], [5, 8]]; 
 var length = intervals.length; 
 
 function merge (a1, a2) {
-    console.log(a1 + "    " + a2); 
     if (a1[0] <= a2[0] && a1[1] >= a2[0]) {
         if (a1[0] <= a2[1] && a1[1] >= a2[1]) {
             return a1; 
@@ -27,15 +25,11 @@ function merge (a1, a2) {
 
 function repeat (array) {
     var num = array.length;
-    var rep = 1; 
-    for (var i = 1; i < num; i++) {
-        rep = rep * i; 
-    }
-    var rep = rep/2; 
+    var rep = (num*(num-1))/2; 
     var a = 0; 
     var b = 1; 
     var index = [[a, b]]; 
-    for (var i = 0; i < rep + 1; i++) {
+    for (var i = 0; i < rep -1; i++) {
         if (b != array.length-1) {
             b++; 
         } else {
@@ -44,6 +38,9 @@ function repeat (array) {
         }
         index.push([a, b]); 
     }
+    console.log("index: " +index); 
+    console.log("num: "+num); 
+    console.log("rep: "+rep);
     
     for (var i = 0; i < index.length; i++) {
         var temp = merge(intervals[index[i][0]], intervals[index[i][1]]); 
@@ -80,4 +77,3 @@ if (result.length == 1) {
 } else {
     console.log(result); 
 }
-
