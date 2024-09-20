@@ -38,9 +38,6 @@ function repeat (array) {
         }
         index.push([a, b]); 
     }
-    console.log("index: " +index); 
-    console.log("num: "+num); 
-    console.log("rep: "+rep);
     
     for (var i = 0; i < index.length; i++) {
         var temp = merge(intervals[index[i][0]], intervals[index[i][1]]); 
@@ -51,9 +48,7 @@ function repeat (array) {
             return [array, true]; 
         }
     }
-
     return [array, false]; 
-    
 }
 
 var result; 
