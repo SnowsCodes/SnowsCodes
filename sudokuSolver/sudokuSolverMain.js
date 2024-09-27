@@ -26,6 +26,17 @@
 
 //to make my life easier
 {
+    //not in use atm
+    var row1 = [0, 6, 9, 1, 7, 0, 0, 0, 0]; 
+    var row2 = [0, 0, 0, 6, 0, 0, 3, 0, 0];
+    var row3 = [5, 0, 8, 0, 2, 0, 0, 0, 7];
+    var row4 = [0, 0, 0, 2, 0, 0, 0, 5, 6];
+    var row5 = [6, 0, 1, 0, 0, 0, 2, 3, 0];
+    var row6 = [0, 5, 0, 0, 8, 0, 0, 0, 0];
+    var row7 = [0, 2, 6, 4, 0, 5, 8, 7, 3];
+    var row8 = [8, 1, 4, 7, 0, 2, 0, 6, 9];
+    var row9 = [0, 0, 0, 8, 0, 9, 1, 0, 0];
+    
     var row1 = [0, 5, 0, 9, 1, 0, 0, 0, 0]; 
     var row2 = [0, 1, 0, 0, 3, 0, 5, 8, 0];
     var row3 = [7, 4, 0, 0, 0, 0, 1, 2, 0];
@@ -131,11 +142,41 @@ function mainRep () {
     }
 }
 
+//can delete later, just for better visualization
+function visualizePossibilities () {
+  var visualize = ""; 
+  for (var i = 0; i < 81; i++) {
+    if ((possibilities[genCoords(i)[0]][genCoords(i)[1]]).length > 0) {
+      visualize += possibilities[genCoords(i)[0]][genCoords(i)[1]] + " ";
+    } else {
+      visualize += "- "
+    }
+    
+    if (i%9 == 8) {
+      console.log(visualize);
+      visualize = ""; 
+    }
+  }
+}
+function visualizeSolved () {
+  var visualize = ""; 
+  for (var i = 0; i < 81; i++) {
+    visualize += rows[genCoords(i)[0]][genCoords(i)[1]] + " ";
+    
+    if (i%9 == 8) {
+      console.log(visualize);
+      visualize = ""; 
+    }
+  }
+}
+
 var complete = false; 
 var counter = 0; 
 while (!complete && counter < 52) {
     mainRep(); 
     counter++; 
+    visualizePossibilities(); 
+    
 }
 
 if (!complete) {
@@ -149,13 +190,6 @@ if (!complete) {
     }
 }
 console.log("unsolved ones are " + unsolved)
-var visualize = ""; 
-for (var i = 0; i < 81; i++) {
-    visualize += rows[genCoords(i)[0]][genCoords(i)[1]];
-    if (visualize.length > 8) {
-        console.log(visualize);
-        var visualize = ""; 
-    }
-}
-console.log(rows); 
+visualizeSolved(); 
 
+console.log(rows); 
