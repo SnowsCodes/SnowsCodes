@@ -1,6 +1,6 @@
 ### Hi there 👋
  - currently working on: sudoku solver
-                         change base (but with fractions! to eliminate errors from floating point!!)
+//                         change base (but with fractions! to eliminate errors from floating point!!)
  - Pronouns: she/her
 <!--
 **SnowsCodes/SnowsCodes** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
