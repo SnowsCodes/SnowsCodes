@@ -1,0 +1,25 @@
+function genPrime (max) {
+  var result = [2]; 
+  var test = true; 
+  var num = 3; 
+  while (result.length < max) {
+    for (var i = 0; result[i] < Math.floor(Math.sqrt(num)); i++) {
+      if (num % (result[i]) == 0) {
+        test = false; 
+        break;
+      }
+    }
+    if (test) {
+    result.push(num); 
+    }
+    num += 2; 
+    test = true; 
+  }
+  return result; 
+}
+
+
+const start = Date.now(); 
+console.log(genPrime(10000)[9999]); 
+const end = Date.now();
+console.log(`Execution time: ${end - start} ms`);
