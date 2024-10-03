@@ -1,4 +1,4 @@
-function changeBase (baseTen, newBase) {
+function changeBase (baseTen, newBase, maxDigit) {
     //separate baseTen into the whole number part and the decimal part
     //the + converts the string into a number 
     var index = baseTen.indexOf("."); 
@@ -42,9 +42,13 @@ function changeBase (baseTen, newBase) {
     
     //console.log(num + "/" + denom); 
     
+    //if there isn't a value entered for maxDigit, set maxDigit equal 10
+    if (!(typeof maxDigit == typeof 1)) {
+      maxDigit = 10; 
+    }
     var counter = 0; 
     var numDiv = denom; 
-    while (num != 0 && counter < 1000) {
+    while (num != 0 && counter < maxDigit) {
         num *= newBase; 
         denom *= newBase; 
         nextDigit = Math.floor(num/numDiv);
@@ -58,4 +62,4 @@ function changeBase (baseTen, newBase) {
     return returnVal; 
 }
 
-console.log(changeBase ("467.372819", 4)); 
+console.log(changeBase ("467.0625", 4)); 
