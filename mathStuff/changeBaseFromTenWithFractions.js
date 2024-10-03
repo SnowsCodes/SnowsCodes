@@ -12,7 +12,7 @@ function changeBase (baseTen, newBase) {
         var num = 0; 
         var denom = 1; 
     }
-    console.log(whole + "  " + num + "/" + denom); 
+    //console.log(whole + "  " + num + "/" + denom); 
     
     
     //highestPower calculates the highest power of the newBase that will be used in calculating 
@@ -40,8 +40,21 @@ function changeBase (baseTen, newBase) {
     }
     returnVal += "."; 
     
-    console.log(num + "/" + denom); 
+    //console.log(num + "/" + denom); 
     
+    var counter = 0; 
+    var numDiv = denom; 
+    while (num != 0 && counter < 1000) {
+        num *= newBase; 
+        denom *= newBase; 
+        nextDigit = Math.floor(num/numDiv);
+        num -= nextDigit * numDiv; 
+        returnVal += nextDigit; 
+        
+        counter++; 
+    }
+    
+    //console.log(denom);
     return returnVal; 
 }
 
