@@ -22,7 +22,7 @@ function changeBase (baseTen, newBase, maxDigit) {
     //if the newBase is greater than 35, add the digit in parethesis like (40)
     var remap = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
     for (var i = remap.length-1; i < newBase; i++) {
-        remap.push("(" + i + ")");
+        remap.push("(" + (i + 1) + ")");
     }
     
     
@@ -63,4 +63,4 @@ function changeBase (baseTen, newBase, maxDigit) {
     return returnVal; 
 }
 
-console.log(changeBase ("467", 12));
+console.log(changeBase ("36", 37));
