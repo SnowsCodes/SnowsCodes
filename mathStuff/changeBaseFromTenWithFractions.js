@@ -29,8 +29,8 @@ function changeBase (baseTen, newBase, maxDigit) {
     //calculates number until it gets to the decimal
     for (var i = highestPower; i >= 0; i--) {
         var nextDigit = Math.floor(whole / (newBase ** i));
-        returnVal += nextDigit; 
         whole -= nextDigit * (newBase ** i);
+        returnVal += remap[nextDigit]; 
     }
     
     //if the denominator is 1, that means it is a whole number and the value is returned
@@ -46,14 +46,15 @@ function changeBase (baseTen, newBase, maxDigit) {
     if (!(typeof maxDigit == typeof 1)) {
       maxDigit = 10; 
     }
+    
     var counter = 0; 
     var numDiv = denom; 
     while (num != 0 && counter < maxDigit) {
         num *= newBase; 
         denom *= newBase; 
         nextDigit = Math.floor(num/numDiv);
-        num -= nextDigit * numDiv; 
-        returnVal += nextDigit; 
+        num -= nextDigit * numDiv;
+        returnVal += remap[nextDigit]; 
         
         counter++; 
     }
@@ -62,4 +63,4 @@ function changeBase (baseTen, newBase, maxDigit) {
     return returnVal; 
 }
 
-console.log(changeBase ("467.0625", 4)); 
+console.log(changeBase ("467", 12));
