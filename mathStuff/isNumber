@@ -23,12 +23,15 @@ function isNumber (input) {
   
   //create array where it is identical to filter, but all values are converted into numbers
   var newFilter = [+filter[0], +filter[1], +filter[2]];
+  if (filter[0] == "-" || filter[0] == "+") {
+      newFilter[0] = 0; 
+  }
   
   //if converting any of the values in filter to a number changes something, it is not a number
   //if newFilter[2] is a decimal, it is not a number
   //if both filter[0] and filter[1] are equal to "", then it is also not a number
   //if filter[1] is a negative number, it is also not a number
-  if ((newFilter[0] != filter[0] && newFilter[0] != 0) || (newFilter[1] != filter[1] && newFilter[1] != 0) || (newFilter[2] != filter[2] && newFilter[2] != 0) || (Math.floor(filter[2]) != filter[2]) || (filter[0] == "" && filter[1] == "") || (filter[1].indexOf("-") > -1)) {
+  if ((newFilter[0] != filter[0] && newFilter[0] != 0) || (newFilter[1] != filter[1] && newFilter[1] != 0) || (newFilter[2] != filter[2] && newFilter[2] != 0) || (Math.floor(filter[2]) != filter[2]) || (filter[0] == "" && filter[1] == "") || (filter[1].indexOf("-") > -1) || (index2 != -1 && filter[2] == "")) {
     return (input + " is not a number");
   }
   
@@ -37,4 +40,4 @@ function isNumber (input) {
   return (input + " is equal to " + (out * (10 ** filter[2])));
 }
 
-console.log(isNumber(".1e1"));
+console.log(isNumber("10.2"));
