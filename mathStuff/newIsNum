@@ -49,6 +49,3 @@ function isNumber (input) {
     
     return true; 
 }
- 
-console.log(isNumber("-1e"));
-
