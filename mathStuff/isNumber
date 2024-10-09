@@ -32,22 +32,28 @@ function isNumber (input) {
     //if it is not e, check if its "."
     //if it is ".", check if theres a number before or after it
     //if its true, then it is a number and set where to 1
+    var numBefore = false; 
     while (where == 0 && index < input.length) {
-        if ((input[index] == "e" || input[index] == "E") && ((isDigit(input[index+1])) || (isDigit(input[index+2] && (input[index+1] == "+" || input[index+1] == "-"))))) {
+        if ((input[index] == "e" || input[index] == "E") && ((isDigit(input[index+1])) || ((input[index+1] == "+" || input[index+1] == "-") && isDigit(input[index+2]))) && numBefore) {
             where = 2; 
-            index++; 
+            if ((input[index+1] == "+" || input[index+1] == "-") && isDigit(input[index+2])) {
+                index++; 
+            }
         } else if (input[index] == "." && (isDigit(input[index+1]) || isDigit(input[index-1]))) {
             where = 1; 
         } else if (!isDigit(input[index])) {
             return false; 
         }
         index++;
+        numBefore = true; 
     }
     
     while (where == 1 && index < input.length) {
         if ((input[index] == "e" || input[index] == "E") && ((isDigit(input[index+1])) || (isDigit(input[index+2] && (input[index+1] == "+" || input[index+1] == "-"))))) {
             where = 2; 
-            index++; 
+            if ((input[index+1] == "+" || input[index+1] == "-") && isDigit(input[index+2])) {
+                index++; 
+            }
         } else if (!isDigit(input[index])) {
             return false; 
         }
@@ -68,14 +74,19 @@ var isTrue0  = ["1", "+1", "-1", "1e1", "1e+1", "1e-1", "+1e1", "+1e+1", "+1e-1"
 var isTrue1 = ["1.", "+1.", "-1.", "1.e1", "1.e+1", "1.e-1", "+1.e1", "+1.e+1", "+1.e-1", "-1.e1", "-1.e+1", "-1.e-1"];
 var isTrue2 = [".1", "+.1", "-.1", ".1e1", ".1e+1", ".1e-1", "+.1e1", "+.1e+1", "+.1e-1", "-.1e1", "-.1e+1", "-.1e-1"];
 var isTrue3 = ["1.1", "+1.1", "-1.1", "1.1e1", "1.1e+1", "1.1e-1", "+1.1e1", "+1.1e+1", "+1.1e-1", "-1.1e1", "-1.1e+1", "-1.1e-1"];
-var isFalse = [".e", "", "-1.e"]; 
+var isFalse = [".e", "", "-1.e", "e9", "1ee1", "1eee1", "1e.1", "11.1ec11", "11.1ce11"]; 
 
-for (var i = 0; i < isTrue0.length; i++) {
+console.time("A");
+for (var i = 0; i < isTrue3.length; i++) {
+  console.log(isNumber(isTrue0[i]));
+  console.log(isNumber(isTrue1[i]));
+  console.log(isNumber(isTrue2[i]));
   console.log(isNumber(isTrue3[i]));
 }
 
-console.log(); 
+console.log();
 
 for (var i = 0; i < isFalse.length; i++) {
   console.log(isNumber(isFalse[i]));
 }
+console.timeEnd("A");
