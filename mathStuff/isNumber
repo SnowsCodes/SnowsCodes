@@ -70,19 +70,15 @@ function isNumber (input) {
     return true; 
 }
 
-var isTrue0  = ["1", "+1", "-1", "1e1", "1e+1", "1e-1", "+1e1", "+1e+1", "+1e-1", "-1e1", "-1e+1", "-1e-1"];
-var isTrue1 = ["1.", "+1.", "-1.", "1.e1", "1.e+1", "1.e-1", "+1.e1", "+1.e+1", "+1.e-1", "-1.e1", "-1.e+1", "-1.e-1"];
-var isTrue2 = [".1", "+.1", "-.1", ".1e1", ".1e+1", ".1e-1", "+.1e1", "+.1e+1", "+.1e-1", "-.1e1", "-.1e+1", "-.1e-1"];
-var isTrue3 = ["1.1", "+1.1", "-1.1", "1.1e1", "1.1e+1", "1.1e-1", "+1.1e1", "+1.1e+1", "+1.1e-1", "-1.1e1", "-1.1e+1", "-1.1e-1"];
-var isFalse = [".e", "", "-1.e", "e9", "1ee1", "1eee1", "1e.1", "11.1ec11", "11.1ce11"]; 
+var isTrue  = ["1", "+1", "-1", "1e1", "1e+1", "1e-1", "+1e1", "+1e+1", "+1e-1", "-1e1", "-1e+1", "-1e-1", "1.", "+1.", "-1.", "1.e1", "1.e+1", "1.e-1", "+1.e1", "+1.e+1", "+1.e-1", "-1.e1", "-1.e+1", "-1.e-1", ".1", "+.1", "-.1", ".1e1", ".1e+1", ".1e-1", "+.1e1", "+.1e+1", "+.1e-1", "-.1e1", "-.1e+1", "-.1e-1", "1.1", "+1.1", "-1.1", "1.1e1", "1.1e+1", "1.1e-1", "+1.1e1", "+1.1e+1", "+1.1e-1", "-1.1e1", "-1.1e+1", "-1.1e-1"];
+var isFalse = [".e", "", "-1.e", "e9", "1ee1", "1eee1", "1e.1", "11.1ec11", "11.1ce11", "-"]; 
+var printsTrue = []; 
 
 console.time("A");
-for (var i = 0; i < isTrue3.length; i++) {
-  console.log(isNumber(isTrue0[i]));
-  console.log(isNumber(isTrue1[i]));
-  console.log(isNumber(isTrue2[i]));
-  console.log(isNumber(isTrue3[i]));
+for (var i = 0; i < isTrue.length; i++) {
+    printsTrue.push(isNumber(isTrue[i]));
 }
+console.log(printsTrue);
 
 console.log();
 
