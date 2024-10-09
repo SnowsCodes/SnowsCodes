@@ -1,0 +1,67 @@
+function isNumber (input) {
+    function isDigit (str) {
+        return (str == "1" || str == "2" || str == "3" || str == "4" || str == "5" || str == "6" || str == "7" || str == "8" || str == "9" || str == "0");
+    }
+    
+    if (input.length == 0) {
+        return false; 
+    }
+    
+    input = input.split(""); 
+    
+    var index = 0; 
+    
+    if (input[0] == "-" || input[0] == "+") {
+        index++;
+    }
+    
+    var where = 0;
+    
+    var numBefore = false; 
+    
+    while (index < input.length) {
+        switch (where) {
+            case 0:
+                if (input[index] == "." && (isDigit(input[index+1]) || isDigit(input[index-1]))) {
+                    where = 1; 
+                    break;
+                }
+            case 1: 
+                if ((input[index] == "e" || input[index] == "E") && ((isDigit(input[index+1])) || ((input[index+1] == "+" || input[index+1] == "-") && isDigit(input[index+2]))) && numBefore) {
+                    where = 2; 
+                    if ((input[index+1] == "+" || input[index+1] == "-") && isDigit(input[index+2])) {
+                        index++; 
+                    }
+                    break;
+                }
+            case 2:
+                if (!isDigit(input[index])) {
+                    return false; 
+                }
+        }
+        index++;
+        numBefore = true; 
+    }
+    return true; 
+}
+
+var isTrue0  = ["1", "+1", "-1", "1e1", "1e+1", "1e-1", "+1e1", "+1e+1", "+1e-1", "-1e1", "-1e+1", "-1e-1"];
+var isTrue1 = ["1.", "+1.", "-1.", "1.e1", "1.e+1", "1.e-1", "+1.e1", "+1.e+1", "+1.e-1", "-1.e1", "-1.e+1", "-1.e-1"];
+var isTrue2 = [".1", "+.1", "-.1", ".1e1", ".1e+1", ".1e-1", "+.1e1", "+.1e+1", "+.1e-1", "-.1e1", "-.1e+1", "-.1e-1"];
+var isTrue3 = ["1.1", "+1.1", "-1.1", "1.1e1", "1.1e+1", "1.1e-1", "+1.1e1", "+1.1e+1", "+1.1e-1", "-1.1e1", "-1.1e+1", "-1.1e-1"];
+var isFalse = [".e", "", "-1.e", "e9", "1ee1", "1eee1", "1e.1", "11.1ec11", "11.1ce11"]; 
+
+console.time("A");
+for (var i = 0; i < isTrue3.length; i++) {
+  console.log(isNumber(isTrue0[i]));
+  console.log(isNumber(isTrue1[i]));
+  console.log(isNumber(isTrue2[i]));
+  console.log(isNumber(isTrue3[i]));
+}
+
+console.log();
+
+for (var i = 0; i < isFalse.length; i++) {
+  console.log(isNumber(isFalse[i]));
+}
+console.timeEnd("A");
