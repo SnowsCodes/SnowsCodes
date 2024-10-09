@@ -63,3 +63,19 @@ function isNumber (input) {
     
     return true; 
 }
+
+var isTrue0  = ["1", "+1", "-1", "1e1", "1e+1", "1e-1", "+1e1", "+1e+1", "+1e-1", "-1e1", "-1e+1", "-1e-1"];
+var isTrue1 = ["1.", "+1.", "-1.", "1.e1", "1.e+1", "1.e-1", "+1.e1", "+1.e+1", "+1.e-1", "-1.e1", "-1.e+1", "-1.e-1"];
+var isTrue2 = [".1", "+.1", "-.1", ".1e1", ".1e+1", ".1e-1", "+.1e1", "+.1e+1", "+.1e-1", "-.1e1", "-.1e+1", "-.1e-1"];
+var isTrue3 = ["1.1", "+1.1", "-1.1", "1.1e1", "1.1e+1", "1.1e-1", "+1.1e1", "+1.1e+1", "+1.1e-1", "-1.1e1", "-1.1e+1", "-1.1e-1"];
+var isFalse = [".e", "", "-1.e"]; 
+
+for (var i = 0; i < isTrue0.length; i++) {
+  console.log(isNumber(isTrue3[i]));
+}
+
+console.log(); 
+
+for (var i = 0; i < isFalse.length; i++) {
+  console.log(isNumber(isFalse[i]));
+}
