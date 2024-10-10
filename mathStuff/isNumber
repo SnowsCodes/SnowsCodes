@@ -17,7 +17,7 @@ function isNumber (input) {
     var index = 0; 
     
     //if the first character is "-" or "+", add one to index
-    if (input[0] == "-" || input[0] == "+") {
+    if ((input[0] == "-" || input[0] == "+") && (isDigit(input[1]) || input[1] == ".")) {
         index++;
     }
     
