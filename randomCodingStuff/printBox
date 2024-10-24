@@ -1,0 +1,105 @@
+function isntObject (name, input) {
+  
+  var rows = ["", "", ""]
+  
+  for (var i = 0; i < name.length; i++) {
+    if (i == 0) {
+      rows[0] += "┌" + name[0]; 
+      rows[1] += "│ " + input[name[0]] + " "; 
+      rows[rows.length-1] += "└"; 
+    }
+    
+    
+    
+    var type = "" + typeof input[name[i]]; 
+    var maxLen = Math.max(Math.max(rows[0].length, rows[1].length), type.length + rows[rows.length-1].length);
+    
+    while (rows[0].length < maxLen) {
+      rows[0] += "─";
+    }
+    
+    while (rows[1].length < maxLen) {
+      rows[1] += " ";
+    }
+    
+    while (rows[rows.length-1].length + type.length < maxLen) {
+      rows[rows.length-1] += "─";
+    }
+    rows[rows.length-1] += type; 
+    
+    if (typeof input[name[i]] == typeof {}) {
+      console.log("AAAA");
+      rows.push(rows[2]);
+      rows.push(rows[2]);
+      rows.push(rows[2]);
+      console.log(rows); 
+      rows[2] = rows[1]; 
+      rows[3] = rows[1]
+      rows[4] = rows[1]; 
+      //SOMETHIGN WENT WRONG HERE
+      rows[2] += input[name[i[0]]];
+      rows[3] += input[name[i[1]]];
+      rows[4] += input[name[i[2]]];
+      console.log(rows); 
+    } else if (i < name.length-1) {
+      rows[0] += "┬" + name[i+1];
+      rows[1] += "│ " + input[name[i+1]] + " ";
+      rows[rows.length-1] += "┴";
+    } else {
+      rows[0] += "┐";
+      rows[1] += "│"; 
+      rows[rows.length-1] += "┘"; 
+    }
+  }
+  
+  return (rows[0] + "\n" + rows[1] + "\n" + rows[rows.length-1]);
+  //return [rows[0], rows[1], rows[rows.length-1]];
+}
+
+function printBox (name, input) {
+  if (typeof input == typeof {}) {
+    var index = Object.getOwnPropertyNames(input); 
+    var len = index.length;
+    var objects = {}; 
+    var indexOfObj = []; 
+    for (var i = index.length-1; i >= 0; i--) {
+      if (typeof input[index[i]] == typeof {}) {
+        objects[i] = printBox(index[i], input[index[i]]);
+        input[index[i]] = objects[i];
+        //delete input[index[i]];
+        //delete index[i];
+        index.length -= 1;  
+      }
+    }
+    
+    //console.log("input: \n" + input[index[3]]);
+    
+    if (index.length == len) {
+      
+      var out = isntObject(index, input);
+    } else {
+      //console.log(objects); 
+      var processed = objects['3'].split("\n");
+      input[3] = processed; 
+      console.log(typeof input[3]);
+      console.log("index: " + index + "\ninput: " + input)
+      var out = isntObject(index, input);
+    }
+  } else {
+    var out = isntObject([name], {[name]: input}); 
+  }
+  return out; 
+}
+
+var inputArray = {"a": 1, "b": "2", "c": "423879"};
+console.log("out is: \n" + printBox("aa", inputArray));
+inputArray = [1, 2, 3, [1, 2]];
+//console.log(isntObject(["1", "2", "3"], [1, "2", 3]));
+console.log("out is: \n" + printBox("aa", inputArray));
+//printBox("a", 1321321321)
+
+
+
+
+
+
