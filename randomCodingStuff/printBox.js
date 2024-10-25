@@ -1,6 +1,7 @@
 function isntObject (name, input) {
   
-  var rows = ["", "", ""]
+  var rows = ["", "", ""];
+  var empty = "| "; 
   
   for (var i = 0; i < name.length; i++) {
     if (i == 0) {
@@ -21,44 +22,38 @@ function isntObject (name, input) {
       rows[1] += " ";
     }
     
+    while (empty.length<maxLen) {
+        empty += " "; 
+    }
+    
     while (rows[rows.length-1].length + type.length < maxLen) {
       rows[rows.length-1] += "─";
     }
     rows[rows.length-1] += type; 
     
-    /*if (typeof input[name[i]] == typeof {}) {
-      console.log("AAAA");
-      rows.push(rows[1]);
-      rows.push(rows[2]);
-      rows[2] = rows[1]; 
-      //SOMETHIGN WENT WRONG HERE
-      console.log("0: " + input[name[i]][0])
-      console.log("1: " + input[name[i]][1])
-      console.log("2: " + input[name[i]][2])
-      rows[1] += input[name[i]][0];
-      rows[2] += input[name[i]][1];
-      rows[3] += input[name[i]][2];
-      console.log(rows); 
-    } else */if (i < name.length-1) {
+    if (i < name.length-1) {
       rows[0] += "┬" + name[i+1];
       /*for (var i = 2; i < rows.length-1; i++) {
         rows[i] += "│ ";
       }*/
       rows[1] += "│ ";
+      empty += "│ ";
       rows[rows.length-1] += "┴";
       if (typeof input[name[i+1]] != typeof {}) {
         rows[1] += input[name[i+1]] + " ";
       } else {
-        rows.push(rows[1]);
+        rows.push(empty);
         rows.push(rows[2]); 
-        rows[2] = rows[1]; 
+        rows[2] = empty; 
         rows[1] += input[name[i+1]][0] + " ";
         rows[2] += input[name[i+1]][1] + " ";
         rows[3] += input[name[i+1]][2] + " ";
       }
     } else {
       rows[0] += "┐";
-      rows[1] += "│"; 
+      for (var j = 1; j < rows.length-1; j++) {
+          rows[j] += "│"; 
+      }
       rows[rows.length-1] += "┘"; 
     }
   }
@@ -114,7 +109,6 @@ inputArray = [1, 2, 3, [1, 2]];
 //console.log(isntObject(["1", "2", "3"], [1, "2", 3]));
 console.log("out is: \n" + printBox("aa", inputArray));
 //printBox("a", 1321321321)
-
 
 
 
