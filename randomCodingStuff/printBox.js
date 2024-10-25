@@ -44,12 +44,16 @@ function isntObject (name, input) {
             if (typeof input[name[i+1]] != typeof {}) {
                 rows[1] += input[name[i+1]] + " ";
             } else {
+                
                 var len = rows.length; 
                 for (var j = rows.length; j < input[name[i+1]].length; j++) {
                     rows.push(empty); 
                 }
-                rows.push(rows[len-1]); 
-                rows[len-1] = empty; 
+                
+                if (rows.length > len) {
+                    rows.push(rows[len-1]); 
+                    rows[len-1] = empty; 
+                }
                 for (var j = 0; j < input[name[i+1]].length; j++) {
                   rows[j+1] += input[name[i+1]][j];
                 }
@@ -127,7 +131,3 @@ inputArray = [1, [1, 2], [1, 2], 2, 3];
 console.log("out is: \n" + printBox("aa", inputArray));
 inputArray = [1, [1, 2], [1, ["a", "b"]], 2, 3];
 console.log("out is: \n" + printBox("aa", inputArray));
-
-
-
-
