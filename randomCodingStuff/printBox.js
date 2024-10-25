@@ -125,6 +125,8 @@ inputArray = [1, [1, 2], 2, 3];
 console.log("out is: \n" + printBox("aa", inputArray));
 inputArray = [1, [1, 2], [1, 2], 2, 3];
 console.log("out is: \n" + printBox("aa", inputArray));
+inputArray = [1, [1, 2], [1, ["a", "b"]], 2, 3];
+console.log("out is: \n" + printBox("aa", inputArray));
 
 
 
