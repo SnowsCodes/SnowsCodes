@@ -6,7 +6,16 @@ function isntObject (name, input) {
     for (var i = 0; i < name.length; i++) {
         if (i == 0) {
             rows[0] += "┌" + name[0]; 
-            rows[1] += "│ " + input[name[0]] + " "; 
+            if (typeof input[name[0]] != typeof {}) {
+                rows[1] += "│ " + input[name[0]] + " "; 
+            } else {
+                for (var j = 0; j < input[name[0]].length-1; j++) {
+                    if (j != 0) {
+                      rows.push("");
+                    }
+                    rows[j+1] += "│ " + input[name[0]][j] + " ";
+                }
+            }
             rows[rows.length-1] += "└"; 
         }
         
@@ -77,7 +86,7 @@ function isntObject (name, input) {
     return returnVal; 
 }
 
-function printBox (name, input) {
+function printBox (name, input, isLast) {
     if (typeof input == typeof {}) {
         var index = Object.getOwnPropertyNames(input); 
         var len = index.length;
@@ -86,14 +95,14 @@ function printBox (name, input) {
         var indexOfObj = []; 
         for (var i = index.length-1; i >= 0; i--) {
             if (typeof input[index[i]] == typeof {}) {
-                objects[i] = printBox(index[i], input[index[i]]).split("\n");
+                objects[i] = printBox(index[i], input[index[i]], false).split("\n");
                 input[index[i]] = objects[i];
                 otherLen -= 1;    
             }
         }
         
         
-        if (otherLen == len) {
+        if (otherLen == len || !isLast) {
             var out = isntObject(index, input);
         } else {
             var temp = isntObject(index, input).split("\n");
@@ -121,17 +130,22 @@ function printBox (name, input) {
 }
 
 var inputArray = {"a": 1, "b": "2", "c": "423879"};
-console.log("out is: \n" + printBox("aa", inputArray));
+console.log("out is: \n" + printBox("aa", inputArray, true));
 inputArray = 1;
-console.log("out is: \n" + printBox("aa", inputArray));
+console.log("out is: \n" + printBox("aa", inputArray, true));
 inputArray = [1, 2, 3, [1, 2]];
-console.log("out is: \n" + printBox("aa", inputArray));
+console.log("out is: \n" + printBox("aa", inputArray, true));
 inputArray = [1, [1, 2], 2, 3];
-console.log("out is: \n" + printBox("aa", inputArray));
+console.log("out is: \n" + printBox("aa", inputArray, true));
 inputArray = [1, [1, 2], [1, 2], 2, 3];
-console.log("out is: \n" + printBox("aa", inputArray));
+console.log("out is: \n" + printBox("aa", inputArray, true));
 inputArray = [1, [1, 2], [1, ["a", "b"]], 2, 3];
-console.log("out is: \n" + printBox("aa", inputArray));
-
+console.log("out is: \n" + printBox("aa", inputArray, true));
+inputArray = [[1], 1];
+console.log("out is: \n" + printBox("aa", inputArray, true));
+inputArray = [[1]];
+console.log("out is: \n" + printBox("aa", inputArray, true));
+inputArray = [[[[[1]]]]];
+console.log("out is: \n" + printBox("aa", inputArray, false));
 
 
