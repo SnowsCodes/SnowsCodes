@@ -1,3 +1,5 @@
+const nameOf = function (f) { return (f).toString().replace(/[ |\(\)=>]/g,''); };
+
 function isntObject (name, input) {
     
     var rows = ["", "", ""];
@@ -106,10 +108,14 @@ function printBox (name, input, isLast) {
             var out = isntObject(index, input);
         } else {
             var temp = isntObject(index, input).split("\n");
+            var out = "┌" + name;
+            
             for (var i = 0; i < temp.length; i++) {
+                for (var j = temp[i].length; j < out.length-2; j++) {
+                  temp[i] += " ";
+                }
                 temp[i] = "│ " + temp[i] + "│";
             }
-            var out = "┌" + name;
             for (var i = out.length; i < temp[0].length-1; i++) {
                 out += "─";
             }
@@ -145,7 +151,5 @@ inputArray = [[1], 1];
 console.log("out is: \n" + printBox("aa", inputArray, true));
 inputArray = [[1]];
 console.log("out is: \n" + printBox("aa", inputArray, true));
-inputArray = [[[[[1]]]]];
-console.log("out is: \n" + printBox("aa", inputArray, false));
-
-
+inputArray = [1, [2, [3, [4, [1]]]]];
+console.log("out is: \n" + printBox("fjdasklfjdsaklfjdsklajflkfjdasklfjdsaklfjdsklajflkajfklajfladlkjflkdsalfsaldfsdajfklajfladlkjflkdsalfsaldfsd", inputArray, true));
