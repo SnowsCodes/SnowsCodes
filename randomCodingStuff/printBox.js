@@ -1,5 +1,3 @@
-const nameOf = function (f) { return (f).toString().replace(/[ |\(\)=>]/g,''); };
-
 function isntObject (name, input) {
     
     var rows = ["", "", ""];
