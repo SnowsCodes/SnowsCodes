@@ -1,6 +1,6 @@
 function modifyString (str) {
-    var before = ["\0", "\a", "\b", "\f", "\n", "\r", "\t", "\v", "\\", "\'", "\"", "\`", "\$"]
-    var after = ["\\0", "\\a", "\\b", "\\f", "\\n", "\\r", "\\t", "\\v", "\\\\", "\\\'", "\\\"", "\\`", "\\$"]
+    var before = ["\0", "\b", "\f", "\n", "\r", "\t", "\v", "\\", "\'", "\"", "\`", "\$"]
+    var after = ["\\0", "\\b", "\\f", "\\n", "\\r", "\\t", "\\v", "\\\\", "\\\'", "\\\"", "\\`", "\\$"]
     for (var i = 0; i < str.length; i++) {
         for (var j = 0; j < before.length; j++) {
             if (str.charAt(i) == before[j]) {
