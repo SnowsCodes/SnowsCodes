@@ -1,3 +1,18 @@
+function modifyString (str) {
+    var before = ["\0", "\a", "\b", "\f", "\n", "\r", "\t", "\v", "\\", "\'", "\"", "\`", "\$"]
+    var after = ["\\0", "\\a", "\\b", "\\f", "\\n", "\\r", "\\t", "\\v", "\\\\", "\\\'", "\\\"", "\\`", "\\$"]
+    for (var i = 0; i < str.length; i++) {
+        for (var j = 0; j < before.length; j++) {
+            if (str.charAt(i) == before[j]) {
+                str = str.substring(0, i) + after[j] + str.substring(i+1); 
+                i++; 
+                break;
+            }
+        }
+    }
+    return str; 
+}
+
 function isntObject (name, input) {
     
     var rows = ["", "", ""];
@@ -7,6 +22,9 @@ function isntObject (name, input) {
         if (i == 0) {
             rows[0] += "┌" + name[0]; 
             if (typeof input[name[0]] != typeof {}) {
+                if (typeof input[name[0]] == typeof "") {
+                    input[name[0]] = modifyString(input[name[0]])
+                }
                 rows[1] += "│ " + input[name[0]] + " "; 
             } else {
                 for (var j = 0; j < input[name[0]].length-1; j++) {
@@ -50,6 +68,9 @@ function isntObject (name, input) {
             empty += "│ ";
             rows[rows.length-1] += "┴";
             if (typeof input[name[i+1]] != typeof {}) {
+                if (typeof input[name[i+1]] == typeof "") {
+                    input[name[i+1]] = modifyString(input[name[i+1]])
+                }
                 rows[1] += input[name[i+1]] + " ";
             } else {
                 var len = rows.length; 
@@ -148,6 +169,14 @@ console.log("out is: \n" + printBox("aa", inputArray, true));
 inputArray = [[1], 1];
 console.log("out is: \n" + printBox("aa", inputArray, true));
 inputArray = [[1]];
+console.log("out is: \n" + printBox("aa", inputArray, true));
+inputArray = ["idkwhy\nthis has line breaks\neither"];
+console.log("out is: \n" + printBox("aa", inputArray, true));
+inputArray = [0, "idkwhy\nthis has line breaks\neither"];
+console.log("out is: \n" + printBox("aa", inputArray, true));
+inputArray = "idk why\nthis has line breaks\neither";
+console.log("out is: \n" + printBox("aa", inputArray, true));
+inputArray = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 console.log("out is: \n" + printBox("aa", inputArray, true));
 inputArray = [1, [2, [3, [4, [1]]]]];
 console.log("out is: \n" + printBox("fjdasklfjdsaklfjdsklajflkfjdasklfjdsaklfjdsklajflkajfklajfladlkjflkdsalfsaldfsdajfklajfladlkjflkdsalfsaldfsd", inputArray, true));
