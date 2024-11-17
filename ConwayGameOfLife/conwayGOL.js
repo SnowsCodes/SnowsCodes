@@ -6,9 +6,9 @@ function conwayGOL () {
     var yUpper = 2; 
     var coords = {
          "2": {"-2": 0, "-1": 0, "0": 0, "1": 0, "2": 0}, 
-         "1": {"-2": 1, "-1": 0, "0": 0, "1": 0, "2": 0}, 
-         "0": {"-2": 1, "-1": 0, "0": "x", "1": 0, "2": 0}, 
-        "-1": {"-2": 1, "-1": 0, "0": 0, "1": 0, "2": 0}, 
+         "1": {"-2": 0, "-1": 0, "0": 0, "1": 1, "2": 0}, 
+         "0": {"-2": 0, "-1": 1, "0": 0, "1": 1, "2": 0}, 
+        "-1": {"-2": 0, "-1": 0, "0": 1, "1": 1, "2": 0}, 
         "-2": {"-2": 0, "-1": 0, "0": 0, "1": 0, "2": 0}, 
     }
     
@@ -46,9 +46,11 @@ function conwayGOL () {
         var yUp = yUpper-1; 
         var yLow = yLower+1; 
         
+        
+        console.log("\nyUpper: " + yUpper + "\nyLower: " + yLower + "\nxLower: " + xLower + "\nxUpper: " + xUpper); 
+        
         //check if it needs to expanded, if yes, expand it
         //check y upper bound
-        console.log("yUpper: " + yUpper);
         for (var i = xLower; i <= xUpper; i++) {
             if (getCoordsVal(i, yUpper) != 0) {
                 cYUpper = true; 
@@ -58,7 +60,6 @@ function conwayGOL () {
         }
         
         //check y lower bound
-        console.log("yLower: " + yLower);
         for (var i = xLower; i <= xUpper; i++) {
             if (getCoordsVal(i, yLower) != 0) {
                 cYLower = true; 
@@ -68,7 +69,6 @@ function conwayGOL () {
         }
         
         //check x lower bound
-        console.log("xLower: " + xLower); 
         for (var i = yUpper; i >= yLower; i--) {
             if (getCoordsVal(xLower, i) != 0) {
                 cXLower = true; 
@@ -78,10 +78,9 @@ function conwayGOL () {
         }
         
         //check x upper bound
-        console.log("xUpper: " + xUpper);
         for (var i = yUpper; i >= yLower; i--) {
             if (getCoordsVal(xUpper, i) != 0) {
-                cXUpper = false; 
+                cXUpper = true; 
                 xUp++; 
                 break; 
             }
@@ -118,7 +117,7 @@ function conwayGOL () {
             }
         }
         console.log("\nyUpper: " + yUpper + "\nyLower: " + yLower + "\nxLower: " + xLower + "\nxUpper: " + xUpper); 
-        console.log("\nyUp: " + yUp + "\nyLow: " + yLow + "\nxLow: " + xLow + "\nxUp: " + xUp); 
+        //console.log("\nyUp: " + yUp + "\nyLow: " + yLow + "\nxLow: " + xLow + "\nxUp: " + xUp); 
         
         
         
@@ -147,8 +146,8 @@ function conwayGOL () {
             }
         }
         
-        printCoords(); 
-        console.log(); 
+        //printCoords(); 
+        //console.log(); 
         
         
         //update values on the border 
@@ -193,8 +192,6 @@ function conwayGOL () {
                 newCoords[i][xUpper] = 0; 
             }
         }
-        
-        printNewCoords(); 
     }
     
     //count the number of neighbors that are filled (aka value of 1)
@@ -237,6 +234,20 @@ function conwayGOL () {
         }
     }
     
+    function printFullCoords (lim) {
+        for (var i = lim * -1; i <= lim; i++) {
+            var row = ""; 
+            for (var j = lim * -1; j <= lim; j++) {
+                if (i < yLower || i > yUpper || j < xLower || j > xUpper) {
+                    row += "0 "
+                } else {
+                    row += coords[i][j] + " ";
+                }
+            }
+            console.log(row); 
+        }
+    }
+    
     function printNewCoords () {
         for (var y = yUpper; y >= yLower; y--) {
             var row = ""; 
@@ -247,16 +258,34 @@ function conwayGOL () {
         }
     }
     
-    setNewCoords(); 
-    
-    function next (x, y) {
-        
+    function updateCoords () {
+        for (var i = yUpper; i >= yLower; i--) {
+            for (var j = xLower; j <= xUpper; j++) {
+                coords[i][j] = newCoords[i][j];
+            }
+        }
     }
+    
+    setNewCoords(); 
+    updateCoords(); 
+    printFullCoords(10); 
+    setNewCoords(); 
+    updateCoords(); 
+    printFullCoords(10); 
+    
     
 }
 
 
 conwayGOL(); 
+
+/*var test = {
+    "1": {}, 
+    "2": 1, 
+}
+
+console.log(typeof test[1]);
+console.log(typeof test[0]);
 
 /*var test = {
     "1": 0, 
@@ -265,3 +294,6 @@ conwayGOL();
 
 console.log(test[0])
 console.log(test[0] == 1 || test[0] == 0)*/
+
+
+
