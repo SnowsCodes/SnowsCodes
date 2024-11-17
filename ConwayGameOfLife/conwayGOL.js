@@ -1,4 +1,4 @@
-function conwayGOL () {
+function conwayGOL (frames) {
     
     var xLower = -2; 
     var xUpper = 2; 
@@ -47,7 +47,7 @@ function conwayGOL () {
         var yLow = yLower+1; 
         
         
-        console.log("\nyUpper: " + yUpper + "\nyLower: " + yLower + "\nxLower: " + xLower + "\nxUpper: " + xUpper); 
+        //console.log("\nyUpper: " + yUpper + "\nyLower: " + yLower + "\nxLower: " + xLower + "\nxUpper: " + xUpper); 
         
         //check if it needs to expanded, if yes, expand it
         //check y upper bound
@@ -116,7 +116,7 @@ function conwayGOL () {
                 coords[i][xLower] = 0; 
             }
         }
-        console.log("\nyUpper: " + yUpper + "\nyLower: " + yLower + "\nxLower: " + xLower + "\nxUpper: " + xUpper); 
+        //console.log("\nyUpper: " + yUpper + "\nyLower: " + yLower + "\nxLower: " + xLower + "\nxUpper: " + xUpper); 
         //console.log("\nyUp: " + yUp + "\nyLow: " + yLow + "\nxLow: " + xLow + "\nxUp: " + xUp); 
         
         
@@ -235,17 +235,22 @@ function conwayGOL () {
     }
     
     function printFullCoords (lim) {
-        for (var i = lim * -1; i <= lim; i++) {
+        for (var i = lim; i >= lim * -1; i--) {
             var row = ""; 
             for (var j = lim * -1; j <= lim; j++) {
                 if (i < yLower || i > yUpper || j < xLower || j > xUpper) {
-                    row += "0 "
+                    row += "\u2610 "
                 } else {
-                    row += coords[i][j] + " ";
+                    if (coords[i][j] == 1) {
+                        row += "\u25a0 "
+                    } else {
+                        row += "\u2610 ";
+                    }
                 }
             }
             console.log(row); 
         }
+        console.log(); 
     }
     
     function printNewCoords () {
@@ -266,34 +271,13 @@ function conwayGOL () {
         }
     }
     
-    setNewCoords(); 
-    updateCoords(); 
     printFullCoords(10); 
-    setNewCoords(); 
-    updateCoords(); 
-    printFullCoords(10); 
-    
-    
+    for (var r = 0; r < frames; r++) {
+        setNewCoords(); 
+        updateCoords(); 
+        printFullCoords(10); 
+    }
 }
 
 
-conwayGOL(); 
-
-/*var test = {
-    "1": {}, 
-    "2": 1, 
-}
-
-console.log(typeof test[1]);
-console.log(typeof test[0]);
-
-/*var test = {
-    "1": 0, 
-    "2": 1, 
-}
-
-console.log(test[0])
-console.log(test[0] == 1 || test[0] == 0)*/
-
-
-
+conwayGOL(10); 
