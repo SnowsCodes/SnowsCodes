@@ -12,15 +12,6 @@ function conwayGOL (frames) {
         "-2": {"-2": 0, "-1": 0, "0": 0, "1": 0, "2": 0}, 
     }
     
-    //for my convinience, delete later
-    /*coords = {
-         "2": {"-2":  0, "-1":  1, "0":  2, "1":  3, "2":  4}, 
-         "1": {"-2":  5, "-1":  6, "0":  7, "1":  8, "2":  9}, 
-         "0": {"-2": 10, "-1": 11, "0": 12, "1": 13, "2": 14}, 
-        "-1": {"-2": 15, "-1": 16, "0": 17, "1": 18, "2": 19}, 
-        "-2": {"-2": 20, "-1": 21, "0": 22, "1": 23, "2": 24}, 
-    }*/
-    
     var newCoords = {
     }
     
@@ -40,21 +31,11 @@ function conwayGOL (frames) {
         var cYUpper = false; 
         var cYLower = false; 
         
-        //the lower and upper bounds of values that have 8 neighbors
-        var xUp = xUpper-1; 
-        var xLow = xLower+1;
-        var yUp = yUpper-1; 
-        var yLow = yLower+1; 
-        
-        
-        //console.log("\nyUpper: " + yUpper + "\nyLower: " + yLower + "\nxLower: " + xLower + "\nxUpper: " + xUpper); 
-        
         //check if it needs to expanded, if yes, expand it
         //check y upper bound
         for (var i = xLower; i <= xUpper; i++) {
             if (getCoordsVal(i, yUpper) != 0) {
                 cYUpper = true; 
-                yUp++; 
                 break;
             }
         }
@@ -63,7 +44,6 @@ function conwayGOL (frames) {
         for (var i = xLower; i <= xUpper; i++) {
             if (getCoordsVal(i, yLower) != 0) {
                 cYLower = true; 
-                yLow--; 
                 break;
             }
         }
@@ -72,7 +52,6 @@ function conwayGOL (frames) {
         for (var i = yUpper; i >= yLower; i--) {
             if (getCoordsVal(xLower, i) != 0) {
                 cXLower = true; 
-                xLow--; 
                 break; 
             }
         }
@@ -80,8 +59,7 @@ function conwayGOL (frames) {
         //check x upper bound
         for (var i = yUpper; i >= yLower; i--) {
             if (getCoordsVal(xUpper, i) != 0) {
-                cXUpper = true; 
-                xUp++; 
+                cXUpper = true;
                 break; 
             }
         }
@@ -116,8 +94,6 @@ function conwayGOL (frames) {
                 coords[i][xLower] = 0; 
             }
         }
-        //console.log("\nyUpper: " + yUpper + "\nyLower: " + yLower + "\nxLower: " + xLower + "\nxUpper: " + xUpper); 
-        //console.log("\nyUp: " + yUp + "\nyLow: " + yLow + "\nxLow: " + xLow + "\nxUp: " + xUp); 
         
         
         
@@ -133,8 +109,8 @@ function conwayGOL (frames) {
         
         
         //update values for values not on the border
-        for (var i = yUp; i >= yLow; i--) {
-            for (var j = xLow; j <= xUp; j++) {
+        for (var i = yUpper-1; i >= yLower+1; i--) {
+            for (var j = xLower+1; j <= xUpper-1; j++) {
                 var numFilled = count(j, i);
                 if (numFilled == 3) {
                     newCoords[i][j] = 1; 
@@ -146,9 +122,6 @@ function conwayGOL (frames) {
             }
         }
         
-        //printCoords(); 
-        //console.log(); 
-        
         
         //update values on the border 
         //value on the corners is always going to be 0
@@ -158,8 +131,8 @@ function conwayGOL (frames) {
         newCoords[yLower][xUpper] = 0; 
         
         //value on the top row
-        for (var i = xLow; i <= xUp; i++) {
-            if (getCoordsVal(i-1, yUp) == 1 && getCoordsVal(i, yUp) == 1 && getCoordsVal(i+1, yUp) == 1) {
+        for (var i = xLower+1; i <= xUpper-1; i++) {
+            if (getCoordsVal(i-1, yUpper-1) == 1 && getCoordsVal(i, yUpper-1) == 1 && getCoordsVal(i+1, yUpper-1) == 1) {
                 newCoords[yUpper][i] = 1;
             } else {
                 newCoords[yUpper][i] = 0;
@@ -167,8 +140,8 @@ function conwayGOL (frames) {
         }
         
         //value on the bottom row
-        for (var i = xLow; i <= xUp; i++) {
-            if (getCoordsVal(i-1, yLow) == 1 && getCoordsVal(i, yLow) == 1 && getCoordsVal(i+1, yLow) == 1) {
+        for (var i = xLower+1; i <= xUpper-1; i++) {
+            if (getCoordsVal(i-1, yLower+1) == 1 && getCoordsVal(i, yLower+1) == 1 && getCoordsVal(i+1, yLower+1) == 1) {
                 newCoords[yLower][i] = 1;
             } else {
                 newCoords[yLower][i] = 0;
@@ -176,8 +149,8 @@ function conwayGOL (frames) {
         }
         
         //value on the left column
-        for (var i = yUp; i >= yLow; i--) {
-            if (coords[i+1][xLow] == 1 && coords[i][xLow] == 1 && coords[i-1][xLow] == 1)  {
+        for (var i = yUpper-1; i >= yLower+1; i--) {
+            if (coords[i+1][xLower+1] == 1 && coords[i][xLower+1] == 1 && coords[i-1][xLower+1] == 1)  {
                 newCoords[i][xLower] = 1; 
             } else {
                 newCoords[i][xLower] = 0; 
@@ -185,8 +158,8 @@ function conwayGOL (frames) {
         }
         
         //value on the right row
-        for (var i = yUp; i >= yLow; i--) {
-            if (coords[i+1][xUp] == 1 && coords[i][xUp] == 1 && coords[i-1][xUp] == 1)  {
+        for (var i = yUpper-1; i >= yLower+1; i--) {
+            if (coords[i+1][xUpper-1] == 1 && coords[i][xUpper-1] == 1 && coords[i-1][xUpper-1] == 1)  {
                 newCoords[i][xUpper] = 1; 
             } else {
                 newCoords[i][xUpper] = 0; 
@@ -251,16 +224,6 @@ function conwayGOL (frames) {
             console.log(row); 
         }
         console.log(); 
-    }
-    
-    function printNewCoords () {
-        for (var y = yUpper; y >= yLower; y--) {
-            var row = ""; 
-            for (var x = xLower; x <= xUpper; x++) {
-                row += getNCoordsVal(x, y);
-            }
-            console.log(row); 
-        }
     }
     
     function updateCoords () {
