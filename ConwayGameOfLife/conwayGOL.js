@@ -5,7 +5,7 @@ function conwayGOL () {
     var yLower = -2; 
     var yUpper = 2; 
     var coords = {
-         "2": {"-2": 1, "-1": 0, "0": 0, "1": 0, "2": 0}, 
+         "2": {"-2": 0, "-1": 0, "0": 0, "1": 0, "2": 0}, 
          "1": {"-2": 1, "-1": 0, "0": 0, "1": 0, "2": 0}, 
          "0": {"-2": 0, "-1": 0, "0": 1, "1": 0, "2": 0}, 
         "-1": {"-2": 0, "-1": 0, "0": 0, "1": 0, "2": 0}, 
@@ -33,38 +33,74 @@ function conwayGOL () {
     }
     
     function setNewCoords () {
+        
+        //c stands for change
+        var cXUpper = false; 
+        var cXLower = false; 
+        var cYUpper = false; 
+        var cYLower = false; 
+        
+        //the lower and upper bounds of values that have 8 neighbors
+        var xUp = xUpper-1; 
+        var xLow = xLower+1;
+        var yUp = yUpper-1; 
+        var yLow = yLower+1; 
+        
         //check if it needs to expanded, if yes, expand it
         //check y upper bound
-        console.log(yUpper);
+        console.log("yUpper: " + yUpper);
         for (var i = xLower; i <= xUpper; i++) {
             if (getCoordsVal(i, yUpper) != 0) {
-                yUpper++; 
+                cYUpper = true; 
+                yUp++; 
                 break;
             }
         }
-        console.log(yUpper);
         
         //check y lower bound
-        console.log(yLower);
+        console.log("yLower: " + yLower);
         for (var i = xLower; i <= xUpper; i++) {
             if (getCoordsVal(i, yLower) != 0) {
-                yLower--; 
+                cYLower = true; 
+                yLow--; 
                 break;
             }
         }
-        console.log(yLower);
         
         //check x lower bound
-        console.log(xLower); 
+        console.log("xLower: " + xLower); 
         for (var i = yUpper; i >= yLower; i--) {
             if (getCoordsVal(xLower, i) != 0) {
-                xLower--; 
+                cXLower = true; 
+                xLow--; 
                 break; 
             }
         }
-        console.log(xLower); 
         
         //check x upper bound
+        console.log("xUpper: " + xUpper);
+        for (var i = yUpper; i >= yLower; i--) {
+            if (getCoordsVal(xUpper, i) != 0) {
+                cXUpper = false; 
+                xUp++; 
+                break; 
+            }
+        }
+        
+        //change upper and lower bound based on the true and false value that was determined in the for loops
+        if (cYUpper) {
+            yUpper++; 
+        }
+        if (cXUpper) {
+            xUpper++; 
+        }
+        if (cYLower) {
+            yLower--; 
+        }
+        if (cXLower) {
+            xLower--; 
+        }
+        console.log("\nyUpper: " + yUpper + "\nyLower: " + yLower + "\nxLower: " + xLower + "\nxUpper" + xUpper); 
         
         
         
