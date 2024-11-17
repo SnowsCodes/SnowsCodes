@@ -7,8 +7,8 @@ function conwayGOL () {
     var coords = {
          "2": {"-2": 0, "-1": 0, "0": 0, "1": 0, "2": 0}, 
          "1": {"-2": 1, "-1": 0, "0": 0, "1": 0, "2": 0}, 
-         "0": {"-2": 0, "-1": 0, "0": 1, "1": 0, "2": 0}, 
-        "-1": {"-2": 0, "-1": 0, "0": 0, "1": 0, "2": 0}, 
+         "0": {"-2": 1, "-1": 0, "0": "x", "1": 0, "2": 0}, 
+        "-1": {"-2": 1, "-1": 0, "0": 0, "1": 0, "2": 0}, 
         "-2": {"-2": 0, "-1": 0, "0": 0, "1": 0, "2": 0}, 
     }
     
@@ -89,7 +89,6 @@ function conwayGOL () {
         
         //change upper and lower bound based on the true and false value that was determined in the for loops
         //if it gets changed, create the row/column that goes with it
-        printCoords(); 
         if (cYUpper) {
             yUpper++; 
             coords[yUpper] = {}; 
@@ -118,29 +117,114 @@ function conwayGOL () {
                 coords[i][xLower] = 0; 
             }
         }
-        printCoords(); 
         console.log("\nyUpper: " + yUpper + "\nyLower: " + yLower + "\nxLower: " + xLower + "\nxUpper: " + xUpper); 
+        console.log("\nyUp: " + yUp + "\nyLow: " + yLow + "\nxLow: " + xLow + "\nxUp: " + xUp); 
         
         
         
-        //create the new values
-        //create new values for values not on the border
+        //update the values
+        
+        //create the new y values for newCoords
+        for (var i = yLower; i <= yUpper; i++) {
+            newCoords[i] = {};
+            for (var j = xLower; j <= xUpper; j++) {
+                newCoords[i][j] = "-"; 
+            }
+        }
         
         
-        //create values for values on the border
-        //value on the top right
-        //value on the top left
-        //value on the bottom right
-        //value on the bottom left
-        //value on the top
-        //value on the bottom
-        //value on the left
-        //value on the right
+        //update values for values not on the border
+        for (var i = yUp; i >= yLow; i--) {
+            for (var j = xLow; j <= xUp; j++) {
+                var numFilled = count(j, i);
+                if (numFilled == 3) {
+                    newCoords[i][j] = 1; 
+                } else if (numFilled == 2 && coords[i][j] == 1) {
+                    newCoords[i][j] = 1; 
+                } else {
+                    newCoords[i][j] = 0; 
+                }
+            }
+        }
+        
+        printCoords(); 
+        console.log(); 
+        
+        
+        //update values on the border 
+        //value on the corners is always going to be 0
+        newCoords[yUpper][xLower] = 0; 
+        newCoords[yLower][xLower] = 0; 
+        newCoords[yUpper][xUpper] = 0; 
+        newCoords[yLower][xUpper] = 0; 
+        
+        //value on the top row
+        for (var i = xLow; i <= xUp; i++) {
+            if (getCoordsVal(i-1, yUp) == 1 && getCoordsVal(i, yUp) == 1 && getCoordsVal(i+1, yUp) == 1) {
+                newCoords[yUpper][i] = 1;
+            } else {
+                newCoords[yUpper][i] = 0;
+            }
+        }
+        
+        //value on the bottom row
+        for (var i = xLow; i <= xUp; i++) {
+            if (getCoordsVal(i-1, yLow) == 1 && getCoordsVal(i, yLow) == 1 && getCoordsVal(i+1, yLow) == 1) {
+                newCoords[yLower][i] = 1;
+            } else {
+                newCoords[yLower][i] = 0;
+            }
+        }
+        
+        //value on the left column
+        for (var i = yUp; i >= yLow; i--) {
+            if (coords[i+1][xLow] == 1 && coords[i][xLow] == 1 && coords[i-1][xLow] == 1)  {
+                newCoords[i][xLower] = 1; 
+            } else {
+                newCoords[i][xLower] = 0; 
+            }
+        }
+        
+        //value on the right row
+        for (var i = yUp; i >= yLow; i--) {
+            if (coords[i+1][xUp] == 1 && coords[i][xUp] == 1 && coords[i-1][xUp] == 1)  {
+                newCoords[i][xUpper] = 1; 
+            } else {
+                newCoords[i][xUpper] = 0; 
+            }
+        }
+        
+        printNewCoords(); 
     }
     
     //count the number of neighbors that are filled (aka value of 1)
     function count (x, y) {
-        
+        var count = 0; 
+        if (coords[y+1][x-1] == 1) {
+            count++; 
+        }
+        if (coords[y+1][x] == 1) {
+            count++; 
+        }
+        if (coords[y+1][x+1] == 1) {
+            count++; 
+        }
+        if (coords[y][x-1] == 1) {
+            count++; 
+        }
+        if (coords[y][x+1] == 1) {
+            count++; 
+        }
+        if (coords[y-1][x-1] == 1) {
+            count++; 
+        }
+        if (coords[y-1][x] == 1) {
+            count++; 
+        }
+        if (coords[y-1][x+1] == 1) {
+            count++; 
+        }
+        return count; 
     }
     
     function printCoords () {
