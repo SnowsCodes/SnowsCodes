@@ -144,9 +144,23 @@ function conwayGOL () {
     }
     
     function printCoords () {
+        for (var y = yUpper; y >= yLower; y--) {
+            var row = ""; 
+            for (var x = xLower; x <= xUpper; x++) {
+                row += getCoordsVal(x, y);
+            }
+            console.log(row); 
+        }
     }
     
     function printNewCoords () {
+        for (var y = yUpper; y >= yLower; y--) {
+            var row = ""; 
+            for (var x = xLower; x <= xUpper; x++) {
+                row += getNCoordsVal(x, y);
+            }
+            console.log(row); 
+        }
     }
     
     setNewCoords(); 
