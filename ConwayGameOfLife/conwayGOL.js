@@ -88,29 +88,65 @@ function conwayGOL () {
         }
         
         //change upper and lower bound based on the true and false value that was determined in the for loops
+        //if it gets changed, create the row/column that goes with it
+        printCoords(); 
         if (cYUpper) {
             yUpper++; 
+            coords[yUpper] = {}; 
+            for (var i = xLower; i <= xUpper; i++) {
+                coords[yUpper][i] = 0; 
+            }
         }
         if (cXUpper) {
             xUpper++; 
+            coords[xUpper] = {}; 
+            for (var i = yLower; i <= yUpper; i++) {
+                coords[i][xUpper] = 0; 
+            }
         }
         if (cYLower) {
             yLower--; 
+            coords[yLower] = {}; 
+            for (var i = xLower; i <= xUpper; i++) {
+                coords[yLower][i] = 0; 
+            }
         }
         if (cXLower) {
             xLower--; 
+            coords[xLower] = {}; 
+            for (var i = yLower; i <= yUpper; i++) {
+                coords[i][xLower] = 0; 
+            }
         }
-        console.log("\nyUpper: " + yUpper + "\nyLower: " + yLower + "\nxLower: " + xLower + "\nxUpper" + xUpper); 
+        printCoords(); 
+        console.log("\nyUpper: " + yUpper + "\nyLower: " + yLower + "\nxLower: " + xLower + "\nxUpper: " + xUpper); 
         
         
         
         //create the new values
+        //create new values for values not on the border
+        
+        
+        //create values for values on the border
+        //value on the top right
+        //value on the top left
+        //value on the bottom right
+        //value on the bottom left
+        //value on the top
+        //value on the bottom
+        //value on the left
+        //value on the right
     }
     
-    function printCoords() {
+    //count the number of neighbors that are filled (aka value of 1)
+    function count (x, y) {
+        
     }
     
-    function printNewCoords() {
+    function printCoords () {
+    }
+    
+    function printNewCoords () {
     }
     
     setNewCoords(); 
