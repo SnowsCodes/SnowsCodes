@@ -1,13 +1,12 @@
-
-    var coords = {
-         "2": {"-2": 0, "-1": 0, "0": 0, "1": 0, "2": 0}, 
-         "1": {"-2": 0, "-1": 0, "0": 0, "1": 1, "2": 0}, 
-         "0": {"-2": 0, "-1": 1, "0": 0, "1": 1, "2": 0}, 
-        "-1": {"-2": 0, "-1": 0, "0": 1, "1": 1, "2": 0}, 
-        "-2": {"-2": 0, "-1": 0, "0": 0, "1": 0, "2": 0}, 
-    }
+var coords = {
+    "2": {"-2": 0, "-1": 0, "0": 0, "1": 0, "2": 0}, 
+    "1": {"-2": 0, "-1": 0, "0": 1, "1": 1, "2": 0}, 
+    "0": {"-2": 0, "-1": 1, "0": 1, "1": 0, "2": 0}, 
+   "-1": {"-2": 0, "-1": 0, "0": 1, "1": 0, "2": 0}, 
+   "-2": {"-2": 0, "-1": 0, "0": 0, "1": 0, "2": 0}, 
+}
     
-function conwayGOL (frames) {
+function conwayGOL (dimensions) {
     
     var xLower = -2; 
     var xUpper = 2; 
@@ -237,17 +236,20 @@ function conwayGOL (frames) {
     }
     
   async function run() {
+    var i = 2; 
      while (true) {
        console.clear(); 
        setNewCoords(); 
        updateCoords(); 
-       printFullCoords(10); 
+       console.log("tick: " + i)
+       printFullCoords(dimensions); 
        console.log(); 
        
        await new Promise(resolve => setTimeout(resolve, 100));
+       i++; 
      }
   }
   run(); 
 }
 
-conwayGOL(); 
+conwayGOL(24); 
