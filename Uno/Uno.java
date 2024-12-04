@@ -78,7 +78,7 @@ class Uno {
     }; 
     
     //create the player variables in an array list, by default there are 4 players
-    private Player[] pList = new Player[4]; 
+    public Player[] pList = new Player[4]; 
     //determines which player's turn it is
     private int pTurn = 0; 
     //determines if it will go clockwise or counterclockwise
@@ -147,7 +147,18 @@ class Main {
     
     
     public static void main(String[] args) {
-        String[] temp = {"a", "b", "c"}; 
+        Uno game = new Uno(); 
+        Player p1 = game.pList[0];
+        int[] a = p1.findMatch("Red 0"); 
+        System.out.print("[");
+        if (a.length > 0) {
+            for (int i = 0; i < a.length-1; i++) {
+                System.out.print(a[i] + ", ");
+            }
+        }
+        System.out.println(a[a.length-1] + "]"); 
+        
+        /*String[] temp = {"a", "b", "c"}; 
         Player p1 = new Player(temp);
         p1.listCards(); 
         p1.addCard("d"); 
@@ -156,6 +167,6 @@ class Main {
         p1.addCard(temp);
         p1.listCards(); 
         p1.removeCard(3); 
-        p1.listCards(); 
+        p1.listCards(); */
     }
 }
