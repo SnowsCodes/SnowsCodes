@@ -4,9 +4,12 @@ class Player {
     private int place = 0;
     //list of the cards the player has
     private String[] cards; 
+    //name of player
+    private String name = ""; 
     
     //constructor
-    public Player (String[] initialCards) {
+    public Player (String[] initialCards, String name) {
+        this.name = name; 
         cards = initialCards; 
     }
     
@@ -69,6 +72,14 @@ class Player {
         }
         return out; 
     }
+    
+    public String getLastCard () {
+        return cards[cards.length-1]; 
+    }
+    
+    public String getName () {
+        return name; 
+    }
 }
 
 
@@ -102,7 +113,7 @@ class Uno {
                 temp[j] = cardList[picked];
                 removeCard(picked); 
             }
-            pList[i] = new Player(temp); 
+            pList[i] = new Player(temp, "Player " + i); 
         }
         
         //put down the first card
@@ -123,7 +134,7 @@ class Uno {
         int id = (int) (Math.random() * cardList.length); 
         String c = cardList[id]; 
         removeCard(id); 
-        return ""; 
+        return c; 
     }
     
     //removes a card from cardList
@@ -138,9 +149,23 @@ class Uno {
         cardList = temp; 
     }
     
+    public addDiscard (String c) {
+        
+    }
+    
     //ok actually play the game here
     public void nextTurn () {
+        int[] temp = pList[pTurn].findMatch(lastCard); 
+        if (temp.length == 0) {
+            pList[pTurn].addCard(drawCard);
+            temp = pList[pTurn].findMatch(lastCard); 
+            if (temp.length > 0) {
+                System.out.println(pList[pTurn].getName() + " drew a " + pList[pTurn].getLastCard() + " and played it");
+                //ADD TO DISCARD PILE
+            }
+        }
         
+        pTurn++; 
     }
     
 }
@@ -151,6 +176,9 @@ class Main {
     
     
     public static void main(String[] args) {
+        
+        
+        /*
         Uno game = new Uno(); 
         Player p1 = game.pList[0];
         int[] a = p1.findMatch("Red 0"); 
