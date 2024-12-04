@@ -54,6 +54,8 @@ class Player {
     public int[] findMatch (String c) {
         int[] out = new int[0]; 
         for (int i = 0; i < cards.length; i++) {
+            //WORKIGN HERE, for some reason when i input Red 0, red 3, red 1, and red skip arent added???
+            System.out.println ("does " + cards[i] + "")
             if (cards[i].substring(0, 1).equals("W") || cards[i].substring(cards[i].length()-1).equals(c.substring(c.length()-1))) {
                 int[] temp = new int[out.length+1];
                 for (int j = 0; j < out.length; j++) {
@@ -155,9 +157,11 @@ class Main {
             for (int i = 0; i < a.length-1; i++) {
                 System.out.print(a[i] + ", ");
             }
+            System.out.println(a[a.length-1] + "]"); 
+        } else {
+            System.out.println("]");
         }
-        System.out.println(a[a.length-1] + "]"); 
-        
+        p1.listCards(); 
         /*String[] temp = {"a", "b", "c"}; 
         Player p1 = new Player(temp);
         p1.listCards(); 
