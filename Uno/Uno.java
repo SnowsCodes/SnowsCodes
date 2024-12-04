@@ -80,6 +80,14 @@ class Player {
     public String getName () {
         return name; 
     }
+    
+    public int getNumCards () {
+        return cards.length; 
+    }
+    
+    public String getCard (int id) {
+        return cards[id]; 
+    }
 }
 
 
@@ -149,23 +157,98 @@ class Uno {
         cardList = temp; 
     }
     
-    public addDiscard (String c) {
-        
+    
+    public void addDiscard (String c) {
+        String[] temp = new String[discard.length+1]; 
+        for (int i = 0; i < discard.length; i++) {
+            temp[i] = discard[i]; 
+        }
+        temp[temp.length-1] = c; 
+        discard = temp; 
+    }
+    
+    private void incPTurn () {
+        if (isClockwise == true) {
+            pTurn++; 
+        } else {
+            pTurn--; 
+        }
     }
     
     //ok actually play the game here
     public void nextTurn () {
         int[] temp = pList[pTurn].findMatch(lastCard); 
+        boolean cardPlayed = false; 
         if (temp.length == 0) {
-            pList[pTurn].addCard(drawCard);
-            temp = pList[pTurn].findMatch(lastCard); 
+            //if there are no cards that can be played, draw a card
+            pList[pTurn].addCard(drawCard());
+            System.out.println(pList[pTurn].getName() + "drew a card");
+            //if the card that got drawn can be played, play card
+            temp = pList[pTurn].findMatch(lastCard);
             if (temp.length > 0) {
-                System.out.println(pList[pTurn].getName() + " drew a " + pList[pTurn].getLastCard() + " and played it");
-                //ADD TO DISCARD PILE
+                System.out.println(pList[pTurn].getName() + " played " + pList[pTurn].getLastCard());
+                //add to discard pile, set it as lastCard(the variable that tracks what is the last card played), and remove card from player
+                addDiscard(pList[pTurn].getLastCard());
+                lastCard = pList[pTurn].getLastCard();
+                pList[pTurn].removeCard(pList[pTurn].getNumCards()-1);
+                
+                //set cardPlayed as true
+                cardPlayed = true; 
             }
+        } else {
+            cardPlayed = true; 
+            //choose a random card to play 
+            int id = (int) (Math.random() * temp.length);
+            addDiscard(pList[pTurn].getCard(id));
+            lastCard = pList[pTurn].getCard(id); 
+            pList[pTurn].removeCard(id); 
         }
         
-        pTurn++; 
+        
+        if (cardPlayed == true) {
+            char lastChar = lastCard.charAt(lastCard.length()-1);
+            if (lastChar == 'p') {
+                //if the card played is a skip, skip the next player's turn
+                incPTurn(); 
+            } else if (lastChar == 'e') {
+                //if the card played is a reverse, change the direction
+                isClockwise = !isClockwise;
+            } else if (lastChar == 'd' || lastChar == 'r') {
+                //if the card played is a wild card or a wild +4, choose a random color 
+                int randomVal = (int) (Math.random() * 4);
+                if (randomVal == 0) {
+                    lastCard = "Red "; 
+                } else if (randomVal == 1) {
+                    lastCard = "Yellow "; 
+                } else if (randomVal == 2) {
+                    lastCard = "Green "; 
+                } else if (randomVal == 3) {
+                    lastCard = "Blue "; 
+                }
+                
+                //if the card is a wild +4, the next player draws four cards and skip their turn 
+                if (lastChar == 'r') {
+                    incPTurn(); 
+                    pTurn %= pList.length; 
+                    System.out.println(pList[pTurn].getName() + "drew four cards");
+                    String[] difTemp = new String[4]; 
+                    for (int i = 0; i < 4; i++) {
+                        difTemp[i] = drawCard(); 
+                    }
+                    pList[pTurn].addCard(difTemp); 
+                }
+            } else if (lastChar == 'o') {
+                //if the card played is a draw two, the next player draw two cards and skip their turn
+                incPTurn(); 
+                pTurn %= pList.length; 
+                System.out.println(pList[pTurn].getName() + "drew two cards");
+                String[] difTemp = new String[2]; 
+                difTemp[0] = drawCard(); 
+                difTemp[1] = drawCard(); 
+                pList[pTurn].addCard(difTemp); 
+            }
+        }
+        incPTurn();  
     }
     
 }
@@ -176,7 +259,8 @@ class Main {
     
     
     public static void main(String[] args) {
-        
+        Uno game = new Uno(); 
+        game.nextTurn(); 
         
         /*
         Uno game = new Uno(); 
