@@ -55,8 +55,10 @@ class Player {
         int[] out = new int[0]; 
         for (int i = 0; i < cards.length; i++) {
             //WORKIGN HERE, for some reason when i input Red 0, red 3, red 1, and red skip arent added???
-            System.out.println ("does " + cards[i] + "")
-            if (cards[i].substring(0, 1).equals("W") || cards[i].substring(cards[i].length()-1).equals(c.substring(c.length()-1))) {
+            System.out.println (cards[i] + "  " + c);
+            System.out.println(cards[i].substring(0, 1) + "   " + c.substring(0, 1));
+            System.out.println(cards[i].substring(0, 1).equals(c.substring(0, 1)));
+            if (cards[i].substring(0, 1).equals("W") || cards[i].substring(0, 1).equals(c.substring(0, 1)) || cards[i].substring(cards[i].length()-1).equals(c.substring(c.length()-1))) {
                 int[] temp = new int[out.length+1];
                 for (int j = 0; j < out.length; j++) {
                     temp[j] = out[j]; 
