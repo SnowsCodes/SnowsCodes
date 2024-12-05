@@ -126,12 +126,13 @@ class Uno {
         //put down the first card
         int id = (int) (Math.random() * cardList.length); 
         String c = cardList[id]; 
-        //p o e
         while (c.substring(0, 1).equals("W") || c.substring(c.length()-1).equals("p") || c.substring(c.length()-1).equals("o") || c.substring(c.length()-1).equals("e")) {
             id = (int) (Math.random() * cardList.length);
             c = cardList[id]; 
         }
         
+        lastCard = c; 
+        System.out.println("The starting card is " + c);
         discard = new String[]{c}; 
         removeCard(id); 
     }
@@ -172,6 +173,10 @@ class Uno {
         } else {
             pTurn--; 
         }
+        if (pTurn < 0) {
+            pTurn += 4; 
+        }
+        pTurn %= 4; 
     }
     
     //ok actually play the game here
@@ -181,7 +186,7 @@ class Uno {
         if (temp.length == 0) {
             //if there are no cards that can be played, draw a card
             pList[pTurn].addCard(drawCard());
-            System.out.println(pList[pTurn].getName() + "drew a card");
+            System.out.println(pList[pTurn].getName() + " drew a card");
             //if the card that got drawn can be played, play card
             temp = pList[pTurn].findMatch(lastCard);
             if (temp.length > 0) {
@@ -198,13 +203,14 @@ class Uno {
             cardPlayed = true; 
             //choose a random card to play 
             int id = (int) (Math.random() * temp.length);
-            addDiscard(pList[pTurn].getCard(id));
-            lastCard = pList[pTurn].getCard(id); 
-            pList[pTurn].removeCard(id); 
+            addDiscard(pList[pTurn].getCard(temp[id]));
+            lastCard = pList[pTurn].getCard(temp[id]); 
+            pList[pTurn].removeCard(temp[id]); 
         }
         
         
         if (cardPlayed == true) {
+            System.out.print(pList[pTurn].getName() + " played " + lastCard);
             char lastChar = lastCard.charAt(lastCard.length()-1);
             if (lastChar == 'p') {
                 //if the card played is a skip, skip the next player's turn
@@ -227,9 +233,8 @@ class Uno {
                 
                 //if the card is a wild +4, the next player draws four cards and skip their turn 
                 if (lastChar == 'r') {
-                    incPTurn(); 
-                    pTurn %= pList.length; 
-                    System.out.println(pList[pTurn].getName() + "drew four cards");
+                    incPTurn();  
+                    System.out.println(pList[pTurn].getName() + " drew four cards");
                     String[] difTemp = new String[4]; 
                     for (int i = 0; i < 4; i++) {
                         difTemp[i] = drawCard(); 
@@ -240,16 +245,22 @@ class Uno {
                 //if the card played is a draw two, the next player draw two cards and skip their turn
                 incPTurn(); 
                 pTurn %= pList.length; 
-                System.out.println(pList[pTurn].getName() + "drew two cards");
+                System.out.println(pList[pTurn].getName() + " drew two cards");
                 String[] difTemp = new String[2]; 
                 difTemp[0] = drawCard(); 
                 difTemp[1] = drawCard(); 
                 pList[pTurn].addCard(difTemp); 
             }
-        }
-        incPTurn();  
+        } 
+        System.out.println(); 
+        incPTurn(); 
     }
     
+    
+    //delete later ig
+    public String getLastCard () {
+        return lastCard; 
+    }
 }
 
 
@@ -259,7 +270,10 @@ class Main {
     
     public static void main(String[] args) {
         Uno game = new Uno(); 
-        game.nextTurn(); 
+        
+        for (int q = 0; q < 10; q++) {
+            game.nextTurn(); 
+        }
         
         /*
         Uno game = new Uno(); 
