@@ -176,6 +176,10 @@ class Uno {
     
     //returns a card from cardList and removes it from the list 
     public String drawCard () {
+        if (cardList.length == 0) {
+            cardList = discard; 
+            discard = new String[0]; 
+        }
         int id = (int) (Math.random() * cardList.length); 
         String c = cardList[id]; 
         removeCard(id); 
