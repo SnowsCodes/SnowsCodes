@@ -1,4 +1,7 @@
 class Player {
+    //static variable
+    static private int playerCount = 0; 
+    
     //instance variables
     //list of the cards the player has
     private String[] cards; 
@@ -9,6 +12,7 @@ class Player {
     public Player (String[] initialCards, String name) {
         this.name = name; 
         cards = initialCards; 
+        playerCount++; 
     }
     
     public void addCard (String input) {
@@ -85,6 +89,10 @@ class Player {
     public String getCard (int id) {
         return cards[id]; 
     }
+    
+    public static int getPlayerCount () {
+        return playerCount; 
+    }
 }
 
 
@@ -131,6 +139,36 @@ class Uno {
         }
         
         lastCard = c; 
+        System.out.println("There are " + Player.getPlayerCount() + " players");
+        System.out.println("The starting card is " + c);
+        discard = new String[]{c}; 
+        removeCard(id); 
+    }
+    
+    //constructor that have a varying number of players
+    public Uno (int numPlayers) {
+        pList = new Player[numPlayers];
+        //create a player for each spot in the player list
+        for (int i = 0; i < pList.length; i++) {
+            String[] temp = new String[7];
+            for (int j = 0; j < 7; j++) {
+                int picked = (int) (Math.random() * cardList.length); 
+                temp[j] = cardList[picked];
+                removeCard(picked); 
+            }
+            pList[i] = new Player(temp, "Player " + (i+1)); 
+        }
+        
+        //put down the first card
+        int id = (int) (Math.random() * cardList.length); 
+        String c = cardList[id]; 
+        while (c.substring(0, 1).equals("W") || c.substring(c.length()-1).equals("p") || c.substring(c.length()-1).equals("o") || c.substring(c.length()-1).equals("e")) {
+            id = (int) (Math.random() * cardList.length);
+            c = cardList[id]; 
+        }
+        
+        lastCard = c; 
+        System.out.println("There are " + Player.getPlayerCount() + " players");
         System.out.println("The starting card is " + c);
         discard = new String[]{c}; 
         removeCard(id); 
@@ -173,9 +211,9 @@ class Uno {
             pTurn--; 
         }
         if (pTurn < 0) {
-            pTurn += 4; 
+            pTurn += pList.length; 
         }
-        pTurn %= 4; 
+        pTurn %= pList.length; 
     }
     
     //ok actually play the game here
@@ -245,7 +283,6 @@ class Uno {
             } else if (lastChar == 'o') {
                 //if the card played is a draw two, the next player draw two cards and skip their turn
                 incPTurn(); 
-                pTurn %= pList.length; 
                 System.out.print("\n" + pList[pTurn].getName() + " drew two cards");
                 String[] difTemp = new String[2]; 
                 difTemp[0] = drawCard(); 
@@ -273,7 +310,7 @@ class Uno {
 
 class Main {
     public static void main(String[] args) {
-        Uno game = new Uno(); 
+        Uno game = new Uno((int) (Math.random() * 5) + 4); 
         String winnerName = ""; 
         
         while (winnerName.equals("")) {
