@@ -1,7 +1,5 @@
 class Player {
     //instance variables
-    //place is what place they are in (1st place, 2nd, etc), and if place = 0, that means that they haven't used all their cards yet
-    private int place = 0;
     //list of the cards the player has
     private String[] cards; 
     //name of player
