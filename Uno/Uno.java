@@ -109,6 +109,7 @@ class Uno {
     private String lastCard = ""; 
     
     private String[] discard; 
+    private String winner = ""; 
     
     //constructor
     public Uno () {
@@ -120,7 +121,7 @@ class Uno {
                 temp[j] = cardList[picked];
                 removeCard(picked); 
             }
-            pList[i] = new Player(temp, "Player " + i); 
+            pList[i] = new Player(temp, "Player " + (i+1)); 
         }
         
         //put down the first card
@@ -181,16 +182,18 @@ class Uno {
     
     //ok actually play the game here
     public void nextTurn () {
+        String name = pList[pTurn].getName(); 
         int[] temp = pList[pTurn].findMatch(lastCard); 
         boolean cardPlayed = false; 
+        
         if (temp.length == 0) {
             //if there are no cards that can be played, draw a card
             pList[pTurn].addCard(drawCard());
-            System.out.println(pList[pTurn].getName() + " drew a card");
+            System.out.print(name + " drew a card");
             //if the card that got drawn can be played, play card
             temp = pList[pTurn].findMatch(lastCard);
             if (temp.length > 0) {
-                System.out.println(pList[pTurn].getName() + " played " + pList[pTurn].getLastCard());
+                System.out.println(" and played " + pList[pTurn].getLastCard());
                 //add to discard pile, set it as lastCard(the variable that tracks what is the last card played), and remove card from player
                 addDiscard(pList[pTurn].getLastCard());
                 lastCard = pList[pTurn].getLastCard();
@@ -208,10 +211,9 @@ class Uno {
             pList[pTurn].removeCard(temp[id]); 
         }
         
-        
         if (cardPlayed == true) {
-            System.out.print(pList[pTurn].getName() + " played " + lastCard);
             char lastChar = lastCard.charAt(lastCard.length()-1);
+            System.out.print(name + " played " + lastCard);
             if (lastChar == 'p') {
                 //if the card played is a skip, skip the next player's turn
                 incPTurn(); 
@@ -230,11 +232,12 @@ class Uno {
                 } else if (randomVal == 3) {
                     lastCard = "Blue "; 
                 }
+                System.out.print(" and changed the color to " + lastCard);
                 
                 //if the card is a wild +4, the next player draws four cards and skip their turn 
                 if (lastChar == 'r') {
                     incPTurn();  
-                    System.out.println(pList[pTurn].getName() + " drew four cards");
+                    System.out.print("\n" + name + " drew four cards");
                     String[] difTemp = new String[4]; 
                     for (int i = 0; i < 4; i++) {
                         difTemp[i] = drawCard(); 
@@ -245,59 +248,39 @@ class Uno {
                 //if the card played is a draw two, the next player draw two cards and skip their turn
                 incPTurn(); 
                 pTurn %= pList.length; 
-                System.out.println(pList[pTurn].getName() + " drew two cards");
+                System.out.print("\n" + pList[pTurn].getName() + " drew two cards");
                 String[] difTemp = new String[2]; 
                 difTemp[0] = drawCard(); 
                 difTemp[1] = drawCard(); 
                 pList[pTurn].addCard(difTemp); 
             }
+            
+            int cardsLeft = pList[pTurn].getNumCards();
+            if (cardsLeft == 1) {
+                System.out.print("\n" + name + " shouted \"UNO!\"");
+            } else if (cardsLeft == 0) {
+                System.out.print("\n" + name + " won!");
+                winner = name; 
+            }
         } 
+        
         System.out.println(); 
         incPTurn(); 
     }
     
-    
-    //delete later ig
-    public String getLastCard () {
-        return lastCard; 
+    public String getWinner () {
+        return winner; 
     }
 }
 
-
-
 class Main {
-    
-    
     public static void main(String[] args) {
         Uno game = new Uno(); 
+        String winnerName = ""; 
         
-        for (int q = 0; q < 10; q++) {
+        while (winnerName.equals("")) {
             game.nextTurn(); 
+            winnerName = game.getWinner(); 
         }
-        
-        /*
-        Uno game = new Uno(); 
-        Player p1 = game.pList[0];
-        int[] a = p1.findMatch("Red 0"); 
-        System.out.print("[");
-        if (a.length > 0) {
-            for (int i = 0; i < a.length-1; i++) {
-                System.out.print(a[i] + ", ");
-            }
-            System.out.println(a[a.length-1] + "]"); 
-        } else {
-            System.out.println("]");
-        }
-        p1.listCards(); 
-        /*String[] temp = {"a", "b", "c"}; 
-        Player p1 = new Player(temp);
-        p1.listCards(); 
-        p1.addCard("d"); 
-        p1.listCards(); 
-        temp[0] = "f"; 
-        p1.addCard(temp);
-        p1.listCards(); 
-        p1.removeCard(3); 
-        p1.listCards(); */
     }
 }
