@@ -11,13 +11,13 @@ class Player {
     
     //constructors
     public Player (String[] initialCards, String name) {
-        cards = new ArrayList<>(Array.asList(initialCards)); 
+        cards = new ArrayList<>(Arrays.asList(initialCards)); 
         numPlayers++; 
         this.name = name; 
     }
     
     public Player (String[] initialCards) {
-        cards = Array.asList(initialCards); 
+        cards = new ArrayList<>(Arrays.asList(initialCards)); 
         numPlayers++; 
         name = "Player " + numPlayers; 
     }
@@ -42,16 +42,16 @@ class Player {
     //find cards that can be played, given card on top of pile
     //WORK HERE
     public int[] findMatch (String c) {
-        
+        return new int[0]; 
     }
     
     //toString method
-    public void toString () {
-        System.out.print("[" + cards.get(0));
+    public String toString () {
+        String out = "[" + cards.get(0);
         for (int i = 1; i < cards.size(); i++) {
-            System.out.print(", " + cards.get(i));
+            out += ", " + cards.get(i);
         }
-        System.out.println("]");
+        return out + "]"; 
     }
 }
 
@@ -65,6 +65,5 @@ class Uno {
 
 class Main {
     public static void main(String[] args) {
-        System.out.println("Try programiz.pro");
     }
 }
