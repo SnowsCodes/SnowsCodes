@@ -1,0 +1,17 @@
+class Player {
+    //static variables
+    static private int numPlayers = 0; 
+    static private boolean hasPlayable = false; 
+    
+    //instance variables
+    private ArrayList<String> cards = new ArrayList<String>(); 
+    
+}
+
+
+
+class Main {
+    public static void main(String[] args) {
+        System.out.println("Try programiz.pro");
+    }
+}
