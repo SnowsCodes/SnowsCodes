@@ -128,6 +128,30 @@ class Main {
         return true; 
     }
     
+    //goes to the next position that is blank
+    public static void nextPos () {
+        pos++; 
+        while (s[cRow(pos)][cCol(pos)] != 0) {
+            pos++; 
+            if (pos == 81) {
+                System.out.println("A solution is found");
+                break; 
+            }
+        }
+    }
+    
+    //goes to previoius position 
+    public static void prevPos () {
+        pos--; 
+        while (unsolved[cRow(pos)][cCol(pos)] != 0) {
+            pos--; 
+            if (pos == 0) {
+                System.out.println("There are no solutions");
+                break; 
+            }
+        }
+    }
+    
     public static void main(String[] args) {
         //set s as unsolved
         for (int i = 0; i < 9; i++) {
