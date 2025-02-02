@@ -92,7 +92,7 @@ class Main {
         for (int i = 0; i < 9; i++) {
             //stands for check x and check y; 
             //int cX
-            if (s[b[i]/10][b[i]%10] == s[x][y] && (b[i]/10 != x || b[i]%10 != y)) {
+            if (s[b[i]/10][b[i]%10] == s[x][y] && s[x][y] != 0 && s[b[i]/10][b[i]%10] != 0 &&(b[i]/10 != x || b[i]%10 != y)) {
                 return false; 
             }
         }
