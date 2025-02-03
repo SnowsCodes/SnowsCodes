@@ -12,7 +12,7 @@ class Main {
         {0, 0, 0, 0, 0, 0, 0, 0, 0}, 
     }; */
     
-    static int pos = 0; 
+    static int pos = -1; 
     
     static int[][] unsolved = { 
         {0, 6, 0, 2, 0, 9, 0, 0, 0}, 
@@ -145,10 +145,21 @@ class Main {
         pos--; 
         while (unsolved[cRow(pos)][cCol(pos)] != 0) {
             pos--; 
-            if (pos == 0) {
+            if (pos == -1) {
                 System.out.println("There are no solutions");
                 break; 
             }
+        }
+    }
+    
+    public static void fill () {
+        nextPos(); 
+        if (pos == 81) {
+            System.out.println("A solution is found");
+        } else if (pos == -1) {
+            System.out.println("There are no solutions");
+        } else {
+            
         }
     }
     
