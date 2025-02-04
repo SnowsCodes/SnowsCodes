@@ -1,30 +1,19 @@
 class Main {
     //inputs
-    /*static int[][] s = { 
-        {0, 0, 0, 0, 0, 0, 0, 0, 0}, 
-        {0, 0, 0, 0, 0, 0, 0, 0, 0}, 
-        {0, 0, 0, 0, 0, 0, 0, 0, 0}, 
-        {0, 0, 0, 0, 0, 0, 0, 0, 0}, 
-        {0, 0, 0, 0, 0, 0, 0, 0, 0}, 
-        {0, 0, 0, 0, 0, 0, 0, 0, 0}, 
-        {0, 0, 0, 0, 0, 0, 0, 0, 0}, 
-        {0, 0, 0, 0, 0, 0, 0, 0, 0}, 
-        {0, 0, 0, 0, 0, 0, 0, 0, 0}, 
-    }; */
     
     static int pos = -1; 
-    
+
     static int[][] unsolved = { 
-        {0, 6, 0, 2, 0, 9, 0, 0, 0}, 
-        {0, 0, 0, 0, 3, 0, 0, 1, 0}, 
-        {1, 0, 0, 6, 0, 0, 0, 0, 9}, 
-        {4, 2, 0, 5, 0, 0, 0, 9, 0}, 
-        {0, 0, 5, 3, 0, 2, 8, 6, 0}, 
-        {0, 8, 3, 1, 0, 0, 0, 2, 4}, 
-        {8, 7, 0, 9, 0, 6, 0, 3, 5}, 
-        {3, 4, 0, 0, 5, 0, 2, 7, 0}, 
-        {2, 0, 6, 0, 7, 3, 0, 0, 1}, 
-    };
+        {6, 0, 0, 0, 8, 0, 0, 5, 0}, 
+        {0, 0, 9, 0, 0, 6, 0, 1, 0}, 
+        {0, 0, 0, 9, 0, 2, 0, 0, 0}, 
+        {9, 0, 0, 0, 0, 0, 0, 0, 2}, 
+        {3, 0, 0, 0, 1, 0, 0, 0, 7}, 
+        {0, 0, 8, 7, 2, 0, 0, 0, 4}, 
+        {0, 0, 0, 0, 0, 0, 0, 0, 0}, 
+        {8, 0, 0, 0, 7, 0, 0, 3, 0}, 
+        {0, 4, 0, 0, 6, 0, 0, 0, 1}, 
+    }; 
     
     static int[][] s = { 
         {0, 0, 0, 0, 0, 0, 0, 0, 0}, 
@@ -50,30 +39,6 @@ class Main {
         {57, 58, 59, 66, 67, 68, 75, 76, 77}, 
         {60, 61, 62, 69, 70, 71, 78, 79, 80}, 
     };
-    /*static int[][] box = {
-        { 0,  1,  2, 10, 11, 12, 20, 21, 22}, 
-        { 3,  4,  5, 13, 14, 15, 23, 24, 25}, 
-        { 6,  7,  8, 16, 17, 18, 26, 27, 28}, 
-        {30, 31, 32, 40, 41, 42, 50, 51, 52}, 
-        {33, 34, 35, 43, 44, 45, 53, 54, 55}, 
-        {36, 37, 38, 46, 47, 48, 56, 57, 58}, 
-        {60, 61, 62, 70, 71, 72, 80, 81, 82}, 
-        {63, 64, 65, 73, 74, 75, 83, 84, 85}, 
-        {66, 67, 68, 76, 77, 78, 86, 87, 88}, 
-    };*/ 
-    
-    //answer
-    /*
-    answer: 
-    7 6 4 2 1 9 3 5 8
-    5 9 8 7 3 4 6 1 2
-    1 3 2 6 8 5 7 4 9 
-    4 2 7 5 6 8 1 9 3
-    9 1 5 3 4 2 8 6 7
-    8 7 1 9 2 6 4 3 5
-    3 4 9 8 5 1 2 7 6
-    2 5 6 4 7 3 9 8 1
-    */
     
     //converts from index (goes from 0 to 80) to the x and y coords
     //row num is first number, col num is second number
@@ -97,7 +62,7 @@ class Main {
         int[] coords = convert(id); 
         int row = coords[0]; 
         int col = coords[1]; 
-        System.out.println("row: " + coords[0] + "  col: " + coords[1]);
+        //System.out.println("row: " + coords[0] + "  col: " + coords[1]);
         
         //check in same row
         for (int i = 0; i < 9; i++) {
@@ -116,7 +81,7 @@ class Main {
         //check in same box
         int boxNum = (row/3)*3 + col/3; 
         int[] b = box[boxNum];
-        System.out.println(b[3]); 
+        //System.out.println(b[3]); 
         for (int i = 0; i < 9; i++) {
             int[] bCoords = convert(b[i]); 
             if (s[bCoords[0]][bCoords[1]] == s[row][col] && !(row == bCoords[0] && col == bCoords[1])) {
@@ -131,10 +96,9 @@ class Main {
     //goes to the next position that is blank
     public static void nextPos () {
         pos++; 
-        while (s[cRow(pos)][cCol(pos)] != 0) {
+        while (pos < 81 && s[cRow(pos)][cCol(pos)] != 0) {
             pos++; 
             if (pos == 81) {
-                System.out.println("A solution is found");
                 break; 
             }
         }
@@ -143,24 +107,42 @@ class Main {
     //goes to previoius position 
     public static void prevPos () {
         pos--; 
-        while (unsolved[cRow(pos)][cCol(pos)] != 0) {
+        while (pos > -1 && unsolved[cRow(pos)][cCol(pos)] != 0) {
             pos--; 
             if (pos == -1) {
-                System.out.println("There are no solutions");
                 break; 
             }
         }
     }
     
     public static void fill () {
-        nextPos(); 
-        if (pos == 81) {
-            System.out.println("A solution is found");
-        } else if (pos == -1) {
-            System.out.println("There are no solutions");
+        if (pos > -1 && s[cRow(pos)][cCol(pos)] == 10) {
+            s[cRow(pos)][cCol(pos)] = 0; 
+            prevPos(); 
         } else {
-            
+            nextPos(); 
         }
+
+        if (pos != 81 && pos != -1) {
+            int rNum = cRow(pos); 
+            int cNum = cCol(pos);
+            s[rNum][cNum]++; 
+            while (!check(pos) && s[rNum][cNum] <= 9) {
+                s[rNum][cNum]++; 
+            }
+        }
+
+        
+    }
+    
+    public static void printS () {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                System.out.print(s[i][j] + " ");
+            }
+            System.out.println(); 
+        }
+        System.out.println(); 
     }
     
     public static void main(String[] args) {
@@ -170,10 +152,20 @@ class Main {
                 s[i][j] = unsolved[i][j];
             }
         }
+
+        System.out.println("Input: "); 
+        printS(); 
         
-        //System.out.println(s[2][1]);
-        System.out.println(check(19));
-        //System.out.println(check(1, 1));
-        //System.out.println(check(1, 2));
+        fill(); 
+        while (pos < 81 && pos > -1) {
+            fill(); 
+            //printS(); 
+        }
+        if (pos == -1) {
+            System.out.println("There are no solutions\n"); 
+        } else {
+            System.out.println("A solution is found");
+            printS(); 
+        }
     }
 }
