@@ -1,3 +1,6 @@
+//current errors: 
+//when inputting a letter when the input should be a string, it goes into an infinite loop (something to do with the scanner..???
+
 import java.util.Scanner; 
 
 class Minesweeper {
