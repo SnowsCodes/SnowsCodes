@@ -3,6 +3,64 @@
 
 import java.util.Scanner; 
 
+class Main {
+    public static void main (String[] args) {
+        Minesweeper m = new Minesweeper("SMALL"); 
+        m.printMines(); 
+        m.printNums(); 
+
+        System.out.println("How to play this game: "); 
+        System.out.println("When entering an input, the first number has to be a 0, 1, or 2");
+        System.out.println("A 0 means you are revealing a spot, a 1 means you are marking a spot, and a 2 means you are unmarking a spot");
+        System.out.println("The second input is a number corresponding to the row it's in");
+        System.out.println("The third input is a letter corresponding to the column it's in, and it is not case sensitive\n");
+
+        Scanner in = new Scanner(System.in);
+        while (!m.getGameEnd() || m.getLeft() == 0) {
+            System.out.println("Enter your next move: ");
+            int input1; 
+            String input2; 
+            int input3; 
+            if (in.hasNextInt()) {
+                input1 = in.nextInt(); 
+            } else {
+                System.out.println("ERROR -- please enter an integer for the first input");
+                continue; 
+            }
+            if (in.hasNext()) {
+                input2 = in.next(); 
+            } else {
+                System.out.println("ERROR -- please enter 3 different inputs separated by a space");
+                continue; 
+            }
+            if (in.hasNext()) {
+                if (in.hasNextInt()) {
+                    input3 = in.nextInt(); 
+                } else {
+                    System.out.println("ERROR -- please enter an integer for the third input");
+                    continue; 
+                }
+            } else {
+                System.out.println("ERROR -- please enter 3 different inputs separated by a space");
+                continue; 
+            }
+            if (input1 == 0) {
+                m.move(input2, input3);
+            } else if (input1 == 1) {
+                m.mark(input2, input3); 
+            } else if (input1 == 2) {
+                m.unmark(input2, input3); 
+            } else {
+                System.out.println("ERROR -- the first number has to be an integer from 0 to 2 inclusive");
+            }
+        }
+        if (m.getLeft() == 0) {
+            System.out.println("YOU WIN!");
+        }
+        in.close();  
+    }
+}
+
 class Minesweeper {
     //static variables
     private static String[] abcs = new String[] {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
@@ -18,6 +76,7 @@ class Minesweeper {
     private String[][] r; 
     //number of non-bomb spaces left
     private int left = 0; 
+    private boolean gameEnd = false; 
 
     //constructors
     //default = medium: h = 14, w = 18
@@ -188,7 +247,7 @@ class Minesweeper {
 
         if (m[row][col] == 1) {
             System.out.println("YOU LOST! \nThis spot is a mine!");
-            left = 0; 
+            gameEnd = true; 
         } else {
             System.out.println("Number revealed");
             r[row][col] = "" + n[row][col]; 
@@ -253,62 +312,8 @@ class Minesweeper {
     public int getLeft () {
         return left; 
     }
-}
-
-class Main {
-    public static void main (String[] args) {
-        Minesweeper m = new Minesweeper("SMALL"); 
-        m.printMines(); 
-        m.printNums(); 
-
-        System.out.println("How to play this game: "); 
-        System.out.println("When entering an input, the first number has to be a 0, 1, or 2");
-        System.out.println("A 0 means you are revealing a spot, a 1 means you are marking a spot, and a 2 means you are unmarking a spot");
-        System.out.println("The second input is a number corresponding to the row it's in");
-        System.out.println("The third input is a letter corresponding to the column it's in, and it is not case sensitive\n");
-
-        Scanner in = new Scanner(System.in);
-        while (m.getLeft() > 0) {
-            System.out.println("Enter your next move: ");
-            int input1; 
-            String input2; 
-            int input3; 
-            if (in.hasNextInt()) {
-                input1 = in.nextInt(); 
-            } else {
-                System.out.println("ERROR -- please enter an integer for the first input");
-                continue; 
-            }
-            if (in.hasNext()) {
-                input2 = in.next(); 
-            } else {
-                System.out.println("ERROR -- please enter 3 different inputs separated by a space");
-                continue; 
-            }
-            if (in.hasNext()) {
-                if (in.hasNextInt()) {
-                    input3 = in.nextInt(); 
-                } else {
-                    System.out.println("ERROR -- please enter an integer for the third input");
-                    continue; 
-                }
-            } else {
-                System.out.println("ERROR -- please enter 3 different inputs separated by a space");
-                continue; 
-            }
-            if (input1 == 0) {
-                m.move(input2, input3);
-            } else if (input1 == 1) {
-                m.mark(input2, input3); 
-            } else if (input1 == 2) {
-                m.unmark(input2, input3); 
-            } else {
-                System.out.println("ERROR -- the first number has to be an integer from 0 to 2 inclusive");
-            }
-        }
-        if (m.getLeft() == 0) {
-            System.out.println("YOU WIN!");
-        }
-        in.close();  
+    
+    public boolean getGameEnd () {
+        return gameEnd; 
     }
 }
