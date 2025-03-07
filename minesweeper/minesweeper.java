@@ -7,16 +7,32 @@ import java.util.ArrayList;
 class Main {
     public static void main (String[] args) {
         Minesweeper m = new Minesweeper("SMALL"); 
-        m.printMines(); 
-        m.printNums(); 
+        //m.printMines(); 
+        //m.printNums(); 
 
+        Scanner in = new Scanner(System.in);
+        
         System.out.println("How to play this game: "); 
         System.out.println("When entering an input, the first number has to be a 0, 1, or 2");
         System.out.println("A 0 means you are revealing a spot, a 1 means you are marking a spot, and a 2 means you are unmarking a spot");
-        System.out.println("The second input is a number corresponding to the row it's in");
-        System.out.println("The third input is a letter corresponding to the column it's in, and it is not case sensitive\n");
+        System.out.println("The second input is a letter corresponding to the column it's in");
+        System.out.println("The third input is a number corresponding to the row it's in\n");
+        System.out.println("What size board do you want? Type in large if you want a large board. Type in small if you want a small board. If you want a custom sized board, enter two numbers separated by a space, with the first one being the width of the board. Type in anything else for a medium sized board.\n");
 
-        Scanner in = new Scanner(System.in);
+        boolean gen = false; 
+        if (in.hasNextInt()) {
+            int width = in.nextInt(); 
+            if (in.hasNextInt()) {
+                m = new Minesweeper(width, in.nextInt());
+                gen = true; 
+            } 
+        } 
+        if (!gen) {
+            m = new Minesweeper(in.next()); 
+        }
+        m.printR(); 
+        System.out.println("A " + m.getW() + " by " + m.getH() + " board has been generated!");
+        
         while (!m.getGameEnd() && m.getLeft() > 0) {
             System.out.println("Enter your next move: ");
             String input1; 
@@ -83,7 +99,7 @@ class Minesweeper {
     //constructors
     //default = medium: h = 14, w = 18
     //small: h = 8, w = 10
-    //large:  h = 10, w = 24
+    //large:  h = 20, w = 24
     Minesweeper () {
         this(14, 18);
     }
@@ -91,7 +107,7 @@ class Minesweeper {
     Minesweeper (String size) {
         String s = size.toUpperCase(); 
         if (s.equals("LARGE")) {
-            h = 10; 
+            h = 20; 
             w = 24; 
         } else if (s.equals("SMALL")) {
             h = 8; 
@@ -103,7 +119,7 @@ class Minesweeper {
         genMap(); 
     }
 
-    Minesweeper (int h, int w) { 
+    Minesweeper (int w, int h) { 
         this.h = h;
         this.w = w; 
 
@@ -209,19 +225,36 @@ class Minesweeper {
         print(n); 
     }
 
-    private void printR() {
+    public void printR() {
         System.out.print("    ");
+        if (h > 10) {
+            System.out.print(" ");
+        }
         for (int i = 0; i < w; i++) {
             System.out.print(abcs[i] + " ");
-        }
-        System.out.println(); 
-
+        } 
+        
+        String out = ""; 
         for (int i = 0; i < h; i++) {
-            String out = i + " | ";
+            if (h >= 10 && i < 10) {
+                out += "\n" + i + "  | ";
+            } else {
+                out += "\n" + i + " | ";
+            }
             for (int j = 0; j < w; j++) {
                 out += r[i][j] + " ";
             }
-            System.out.println(out); 
+            out += " | " + i; 
+        }
+        System.out.println(out); 
+        
+        
+        System.out.print("    ");
+        if (h > 10) {
+            System.out.print(" ");
+        }
+        for (int i = 0; i < w; i++) {
+            System.out.print(abcs[i] + " ");
         }
         System.out.println(); 
     }
@@ -260,15 +293,15 @@ class Minesweeper {
             System.out.println("YOU LOST! \nThis spot is a mine!");
             gameEnd = true; 
         } else {
-            System.out.println("Number revealed");
             r[row][col] = "" + n[row][col]; 
             left--; 
             if (n[row][col] == 0) {
-                System.out.println("ZEROOOO");
+                //System.out.println("ZEROOOO");
                 revealZeroes(row * w + col);
             }
-            System.out.println("number left: " + left);
+            //System.out.println("number left: " + left);
             printR(); 
+            System.out.println("Number revealed");
         }
     }
     
@@ -363,9 +396,9 @@ class Minesweeper {
             return; 
         } 
 
-        System.out.println("Spot marked");
         r[row][col] = "!";  
         printR(); 
+        System.out.println("Spot marked");
     }
 
     public void unmark (String c, int row) {
@@ -401,5 +434,13 @@ class Minesweeper {
     
     public boolean getGameEnd () {
         return gameEnd; 
+    }
+    
+    public int getW () {
+        return w; 
+    }
+    
+    public int getH () {
+        return h; 
     }
 }
