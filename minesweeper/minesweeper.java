@@ -6,19 +6,18 @@ import java.util.ArrayList;
 
 class Main {
     public static void main (String[] args) {
-        Minesweeper m = new Minesweeper("SMALL"); 
-        //m.printMines(); 
-        //m.printNums(); 
-
+        Minesweeper m = new Minesweeper();
         Scanner in = new Scanner(System.in);
         
+        //explanation of game
         System.out.println("How to play this game: "); 
         System.out.println("When entering an input, the first number has to be a 0, 1, or 2");
         System.out.println("A 0 means you are revealing a spot, a 1 means you are marking a spot, and a 2 means you are unmarking a spot");
         System.out.println("The second input is a letter corresponding to the column it's in");
         System.out.println("The third input is a number corresponding to the row it's in\n");
         System.out.println("What size board do you want? Type in large if you want a large board. Type in small if you want a small board. If you want a custom sized board, enter two numbers separated by a space, with the first one being the width of the board. Type in anything else for a medium sized board.\n");
-
+        
+        //generates a map either with two inputted numbers or an inputted string
         boolean gen = false; 
         if (in.hasNextInt()) {
             int width = in.nextInt(); 
@@ -33,6 +32,8 @@ class Main {
         m.printR(); 
         System.out.println("A " + m.getW() + " by " + m.getH() + " board has been generated!");
         
+        //runs the actual game
+        //while the game hasn't ended, ask the player for an input for a move
         while (!m.getGameEnd() && m.getLeft() > 0) {
             System.out.println("Enter your next move: ");
             String input1; 
@@ -71,6 +72,8 @@ class Main {
                 System.out.println("ERROR -- the first number has to be an integer from 0 to 2 inclusive");
             }
         }
+        
+        //if there are no positions left to reveal, print you win
         if (m.getLeft() == 0) {
             System.out.println("YOU WIN!");
         }
@@ -126,6 +129,9 @@ class Minesweeper {
         genMap(); 
     }
 
+    //methods
+    
+    //generate a map for the mines
     private void genMap () {
         //15% of the board are mines
         int total = w * h; 
@@ -199,32 +205,8 @@ class Minesweeper {
             }
         }
     }
-
-    private void print (int[][] in) {
-        System.out.print("    ");
-        for (int i = 0; i < w; i++) {
-            System.out.print(abcs[i] + " ");
-        }
-        System.out.println(); 
-
-        for (int i = 0; i < h; i++) {
-            String out = i + " | ";
-            for (int j = 0; j < w; j++) {
-                out += in[i][j] + " ";
-            }
-            System.out.println(out); 
-        }
-        System.out.println(); 
-    }
-
-    public void printMines () {
-        print(m); 
-    }
-
-    public void printNums () {
-        print(n); 
-    }
-
+    
+    //prints the revealed board
     public void printR() {
         System.out.print("    ");
         if (h > 10) {
@@ -259,6 +241,7 @@ class Minesweeper {
         System.out.println(); 
     }
 
+    //reveals a tile
     public void move (String c, int row) {
         c = c.toUpperCase(); 
         int col = -1; 
@@ -274,7 +257,6 @@ class Minesweeper {
                 genMap(); 
             }
         }
-        
         
         if (col < 0 || row < 0 || row >= h) {
             System.out.println("Please try again, this position does not exist");
@@ -305,6 +287,7 @@ class Minesweeper {
         }
     }
     
+    //reveals all numbers surrounding zero
     public void revealZeroes (int id) {
         ArrayList<Integer> list = new ArrayList<Integer>(); 
         list.add(id); 
