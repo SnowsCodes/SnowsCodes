@@ -1,7 +1,8 @@
 //current errors: 
-//when inputting a letter when the input should be a string, it goes into an infinite loop (something to do with the scanner..???
+//need to fix whatever is happening with revealZeroes
 
 import java.util.Scanner; 
+import java.util.ArrayList; 
 
 class Main {
     public static void main (String[] args) {
@@ -16,13 +17,13 @@ class Main {
         System.out.println("The third input is a letter corresponding to the column it's in, and it is not case sensitive\n");
 
         Scanner in = new Scanner(System.in);
-        while (!m.getGameEnd() || m.getLeft() == 0) {
+        while (!m.getGameEnd() && m.getLeft() > 0) {
             System.out.println("Enter your next move: ");
-            int input1; 
+            String input1; 
             String input2; 
             int input3; 
-            if (in.hasNextInt()) {
-                input1 = in.nextInt(); 
+            if (in.hasNext()) {
+                input1 = in.next(); 
             } else {
                 System.out.println("ERROR -- please enter an integer for the first input");
                 continue; 
@@ -44,11 +45,11 @@ class Main {
                 System.out.println("ERROR -- please enter 3 different inputs separated by a space");
                 continue; 
             }
-            if (input1 == 0) {
+            if (input1.equals("0")) {
                 m.move(input2, input3);
-            } else if (input1 == 1) {
+            } else if (input1.equals("1")) {
                 m.mark(input2, input3); 
-            } else if (input1 == 2) {
+            } else if (input1.equals("2")) {
                 m.unmark(input2, input3); 
             } else {
                 System.out.println("ERROR -- the first number has to be an integer from 0 to 2 inclusive");
@@ -252,8 +253,88 @@ class Minesweeper {
             System.out.println("Number revealed");
             r[row][col] = "" + n[row][col]; 
             left--; 
+            if (n[row][col] == 0) {
+                System.out.println("ZEROOOO");
+                revealZeroes(row * w + col);
+            }
+            System.out.println("number left: " + left);
             printR(); 
         }
+    }
+    
+    public void revealZeroes (int id) {
+        ArrayList<Integer> list = new ArrayList<Integer>(); 
+        list.add(id); 
+        //find all the values to be revealed
+        for (int i = 0; i < list.size(); i++) {
+            //if the value at i is zero, add all surrounding s
+            //for each value in s, if list does not contain it, add it to list
+            int c = list.get(i); 
+            System.out.println("c: " + c + "    " + abcs[c%w] + c/w);
+            if (i == 0 || n[i/w][i%w] == 0) {
+                int[] s = new int[8]; 
+                s[0] = c - w - 1; 
+                s[1] = c - w; 
+                s[2] = c - w + 1; 
+                s[3] = c - 1; 
+                s[4] = c + 1; 
+                s[5] = c + w - 1; 
+                s[6] = c + w; 
+                s[7] = c + w + 1; 
+                int len = list.size(); 
+                
+                for (int j = 0; j < 8; j++) {
+                    if (s[j] < 0 || s[j] >= w*h) {
+                        s[j] = c; 
+                    } 
+                    if ((j == 0 || j == 2) && s[j]/w != (c/w)-1) {
+                        s[j] = c; 
+                    } else if ((j == 5 || j == 7) && s[j]/w != (c/w)+1) {
+                        s[j] = c; 
+                    } else if ((j == 3 || j == 4) && s[j]/w != c/w) {
+                        s[j] = c; 
+                    }
+                }
+                
+                System.out.println(abcs[s[0]%w] + s[0]/w + "   " + abcs[s[1]%w] + s[1]/w + "   " + abcs[s[2]%w] + s[2]/w + "   " + abcs[s[3]%w] + s[3]/w + "   " + abcs[s[4]%w] + s[4]/w + "   " + abcs[s[5]%w] + s[5]/w + "   " + abcs[s[6]%w] + s[6]/w + "   " + abcs[s[7]%w] + s[7]/w);
+                
+                System.out.println(c + "\n" + s[0]/w + s[0]%w + "  " + s[1]/w + s[1]%w + "  " + s[2]/w + s[2]%w + "  " + s[3]/w + s[3]%w + "  " + s[4]/w + s[4]%w + "  " + s[5]/w + s[5]%w + "  " + s[6]/w + s[6]%w + "  " + s[7]/w + s[7]%w);
+                
+                
+                for (int j = 0; j < 8; j++) {
+                    boolean dupe = false; 
+                    for (int k = 0; k < len; k++) {
+                        if (s[j] == list.get(k)) {
+                            dupe = true; 
+                            break; 
+                        }
+                        /*if (j == 0 || j == 3 || j == 5) {
+                            if (i%w == 0) {
+                                dupe = true; 
+                                System.out.println(j + "  " + k);
+                                break; 
+                            }
+                        }
+                        if (j == 2 || j == 4 || j == 7) {
+                            if (i%w == w-1) {
+                                dupe = true; 
+                                System.out.println(j + "  " + k);
+                                break; 
+                            }
+                        }*/
+                    }
+                    if (!dupe) {
+                        list.add(s[j]); 
+                    }
+                }
+            }
+        }
+        //reveal all values
+        for (int i = 0; i < list.size(); i++) {
+            int p = list.get(i); 
+            r[p/w][p%w] = "" + n[p/w][p%w]; 
+        }
+        left -= list.size(); 
     }
 
     public void mark (String c, int row) {
