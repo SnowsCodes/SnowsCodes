@@ -1,5 +1,5 @@
 //current errors: 
-//no none errors currently
+//no none errors
 
 import java.util.Scanner; 
 import java.util.ArrayList; 
@@ -329,9 +329,17 @@ class Minesweeper {
             int p = list.get(i); 
             if (r[p/w][p%w].equals("-")) {
                 r[p/w][p%w] = "" + n[p/w][p%w]; 
-                left--; 
             }
         }
+        
+        //recount left
+        int count = 0; 
+        for (int i = 0; i < w*h; i++) {
+            if (r[i/w][i%w].equals("-") && n[i/w][i%w] < 9) {
+                count++; 
+            }
+        }
+        left = count; 
     }
 
     public void mark (String c, int row) {
