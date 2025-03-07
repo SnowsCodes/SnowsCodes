@@ -1,5 +1,5 @@
 //current errors: 
-//need to fix whatever is happening with revealZeroes
+//no none errors currently
 
 import java.util.Scanner; 
 import java.util.ArrayList; 
@@ -78,6 +78,7 @@ class Minesweeper {
     //number of non-bomb spaces left
     private int left = 0; 
     private boolean gameEnd = false; 
+    private boolean isFirst = true; 
 
     //constructors
     //default = medium: h = 14, w = 18
@@ -233,13 +234,22 @@ class Minesweeper {
                 col = i; 
             }
         }
+        
+        if (isFirst) {
+            isFirst = false; 
+            while (n[row][col] != 0) {
+                genMap(); 
+            }
+        }
+        
+        
         if (col < 0 || row < 0 || row >= h) {
             System.out.println("Please try again, this position does not exist");
             return; 
         }
 
         if (r[row][col].equals("!")) {
-            System.out.println("Please try again, this position has been marked as a bomb");
+            System.out.println("Please try again, this position has been marked as a mine");
             return; 
         } else if (!r[row][col].equals("-")) {
             System.out.println("Please try again, this position has already been revealed");
@@ -270,8 +280,9 @@ class Minesweeper {
             //if the value at i is zero, add all surrounding s
             //for each value in s, if list does not contain it, add it to list
             int c = list.get(i); 
-            System.out.println("c: " + c + "    " + abcs[c%w] + c/w);
-            if (i == 0 || n[i/w][i%w] == 0) {
+            //System.out.println("c: " + c + "    " + abcs[c%w] + c/w);
+            //System.out.println(c/w + " " + c%w + "  " + n[c/w][c%w] + "  " + (n[c/w][c%w] == 0));
+            if (n[c/w][c%w] == 0) {
                 int[] s = new int[8]; 
                 s[0] = c - w - 1; 
                 s[1] = c - w; 
@@ -296,9 +307,7 @@ class Minesweeper {
                     }
                 }
                 
-                System.out.println(abcs[s[0]%w] + s[0]/w + "   " + abcs[s[1]%w] + s[1]/w + "   " + abcs[s[2]%w] + s[2]/w + "   " + abcs[s[3]%w] + s[3]/w + "   " + abcs[s[4]%w] + s[4]/w + "   " + abcs[s[5]%w] + s[5]/w + "   " + abcs[s[6]%w] + s[6]/w + "   " + abcs[s[7]%w] + s[7]/w);
-                
-                System.out.println(c + "\n" + s[0]/w + s[0]%w + "  " + s[1]/w + s[1]%w + "  " + s[2]/w + s[2]%w + "  " + s[3]/w + s[3]%w + "  " + s[4]/w + s[4]%w + "  " + s[5]/w + s[5]%w + "  " + s[6]/w + s[6]%w + "  " + s[7]/w + s[7]%w);
+                //System.out.println(abcs[s[0]%w] + s[0]/w + "   " + abcs[s[1]%w] + s[1]/w + "   " + abcs[s[2]%w] + s[2]/w + "   " + abcs[s[3]%w] + s[3]/w + "   " + abcs[s[4]%w] + s[4]/w + "   " + abcs[s[5]%w] + s[5]/w + "   " + abcs[s[6]%w] + s[6]/w + "   " + abcs[s[7]%w] + s[7]/w);
                 
                 
                 for (int j = 0; j < 8; j++) {
@@ -308,20 +317,6 @@ class Minesweeper {
                             dupe = true; 
                             break; 
                         }
-                        /*if (j == 0 || j == 3 || j == 5) {
-                            if (i%w == 0) {
-                                dupe = true; 
-                                System.out.println(j + "  " + k);
-                                break; 
-                            }
-                        }
-                        if (j == 2 || j == 4 || j == 7) {
-                            if (i%w == w-1) {
-                                dupe = true; 
-                                System.out.println(j + "  " + k);
-                                break; 
-                            }
-                        }*/
                     }
                     if (!dupe) {
                         list.add(s[j]); 
@@ -332,9 +327,11 @@ class Minesweeper {
         //reveal all values
         for (int i = 0; i < list.size(); i++) {
             int p = list.get(i); 
-            r[p/w][p%w] = "" + n[p/w][p%w]; 
+            if (r[p/w][p%w].equals("-")) {
+                r[p/w][p%w] = "" + n[p/w][p%w]; 
+                left--; 
+            }
         }
-        left -= list.size(); 
     }
 
     public void mark (String c, int row) {
