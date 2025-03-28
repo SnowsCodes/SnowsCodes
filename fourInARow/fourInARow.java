@@ -161,6 +161,33 @@ class Board {
         }
         
         //check diagonal \
+        left = c;
+        right = c; 
+        col = c;
+        row = len-1; 
+        while (col >= 0 && row < 6 && board.get(col).size() > row) {
+            if (board.get(col).get(row) == board.get(c).get(len-1)) {
+                col--; 
+                row++; 
+            } else {
+                break; 
+            }
+        }
+        left = col+1; 
+        col = c; 
+        row = len-1; 
+        while (col < 7 && row >= 0 && board.get(col).size() > row) {
+            if (board.get(col).get(row) == board.get(c).get(len-1)) {
+                col++; 
+                row--; 
+            } else {
+                break; 
+            }
+        }
+        right = col-1; 
+        if (right - left >= 3) {
+            return true; 
+        }
         
         return false; 
     }
