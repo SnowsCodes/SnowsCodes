@@ -14,7 +14,9 @@ class Main {
         } else {
             System.out.println("You are not playing with a bot");
         }
-
+        
+        b.print(); 
+        
         //actual playing the game
         while (b.getMoveNum() < 42 && !b.getGameEnd()) {
             if (b.getMoveNum()%2 == 0) {
@@ -92,85 +94,59 @@ class Board {
     }
 
     public boolean check (int c) {
-        ArrayList<Integer> col = board.get(c); 
-        int len = col.size(); 
+        int len = board.get(c).size(); 
         //check horizontal
-        //checks for four in a rows where all the other columns are to the left of c
-        if (c-3 > -1 && board.get(c-1).size() >= len && board.get(c-2).size() >= len && board.get(c-3).size() >= len) {
-            if (col.get(len-1) == board.get(c-1).get(len-1) && col.get(len-1) == board.get(c-2).get(len-1) && col.get(len-1) == board.get(c-3).get(len-1)) {
-                return true; 
+        int left = c, right = c, i = c; 
+        while (i >= 0) {
+            if (board.get(i).size() >= len && board.get(i).get(len-1) == board.get(c).get(len-1)) {
+                i--; 
+            } else {
+                break; 
             }
         }
-        //checks for four in a rows where all but one of the other columns are to the left of c
-        if (c-2 > -1 && c+1 < 7 && board.get(c-1).size() >= len && board.get(c-2).size() >= len && board.get(c+1).size() >= len) {
-            if (col.get(len-1) == board.get(c-1).get(len-1) && col.get(len-1) == board.get(c-2).get(len-1) && col.get(len-1) == board.get(c+1).get(len-1)) {
-                return true; 
+        left = i+1; 
+        i = c; 
+        while (i < 7) {
+            if (board.get(i).size() >= len && board.get(i).get(len-1) == board.get(c).get(len-1)) {
+                i++; 
+            } else {
+                break; 
             }
         }
-        //checks for four in a rows where all but one of the other columns are to the right of c
-        if (c-1 > -1 && c+2 < 7 && board.get(c-1).size() >= len && board.get(c+1).size() >= len && board.get(c+2).size() >= len) {
-            if (col.get(len-1) == board.get(c-1).get(len-1) && col.get(len-1) == board.get(c+1).get(len-1) && col.get(len-1) == board.get(c+2).get(len-1)) {
-                return true; 
-            }
+        right = i-1; 
+        //System.out.println(right + "  " + left);
+        if (right - left >= 3) {
+            return true; 
         }
-        //checks for four in a rows where all other columns are to the right of c
-        if (c+3 < 7 && board.get(c+1).size() >= len && board.get(c+2).size() >= len && board.get(c+3).size() >= len) {
-            if (col.get(len-1) == board.get(c+1).get(len-1) && col.get(len-1) == board.get(c+2).get(len-1) && col.get(len-1) == board.get(c+3).get(len-1)) {
-                return true; 
-            }
-        }
-
+        
         //check vertical
-        if (len >= 4) {
-            if (col.get(len-1) == col.get(len-2) && col.get(len-1) == col.get(len-3) && col.get(len-1) == col.get(len-4)) {
-                return true; 
+        int bottom = len-2; 
+        while (bottom >= 0) {
+            if (board.get(c).get(bottom) == board.get(c).get(len-1)) {
+                bottom--; 
+            } else {
+                break; 
             }
         }
-
+        if (len - bottom - 1 >= 4) {
+            return true; 
+        }
+        
         //check diagonal /
-        if (c-3 > -1 && len-3 > 0 && board.get(c-1).size() >= len-1 && board.get(c-2).size() >= len-2 && board.get(c-3).size() >= len-3) {
-            if (col.get(len-1) == board.get(c-1).get(len-2) && col.get(len-1) == board.get(c-2).get(len-3) && col.get(len-1) == board.get(c-3).get(len-4)) {
-                return true; 
+        int left = c, right = c; 
+        int col = c-1, row = len-2; 
+        while (col >= 0 && row >= 0 && board.get(col).size() > row) {
+            if (board.get(col).get(row) == board.get(c).get(len-1)) {
+                col--; 
+                row--; 
+            } else {
+                break; 
             }
         }
-        if (c-2 > -1 && c+1 < 7 && len-2 > 0 && len+1 <= 6 && board.get(c-1).size() >= len-1 && board.get(c-2).size() >= len-2 && board.get(c+1).size() >= len+1) {
-            if (col.get(len-1) == board.get(c-1).get(len-2) && col.get(len-1) == board.get(c-2).get(len-3) && col.get(len-1) == board.get(c+1).get(len)) {
-                return true; 
-            }
-        }
-        if (c-1 > -1 && c+2 < 7 && len-1 > 0 && len+2 <= 6 && board.get(c-1).size() >= len-1 && board.get(c+1).size() >= len+1 && board.get(c+2).size() >= len+2) {
-            if (col.get(len-1) == board.get(c-1).get(len-2) && col.get(len-1) == board.get(c+1).get(len) && col.get(len-1) == board.get(c+2).get(len+1)) {
-                return true; 
-            }
-        }
-        if (c+3 > 7 && len+3 <= 6 && board.get(c+1).size() >= len+1 && board.get(c+2).size() >= len+2 && board.get(c+3).size() >= len+3) {
-            if (col.get(len-1) == board.get(c+1).get(len) && col.get(len-1) == board.get(c+2).get(len+1) && col.get(len-1) == board.get(c+3).get(len+2)) {
-                return true; 
-            }
-        }
-
+        left = col+1; 
+        
         //check diagonal \
-        if (c-3 > -1 && len+3 <= 6 && board.get(c-1).size() >= len+1 && board.get(c-2).size() >= len+2 && board.get(c-3).size() >= len+3) {
-            if (col.get(len-1) == board.get(c-1).get(len) && col.get(len-1) == board.get(c-2).get(len+1) && col.get(len-1) == board.get(c-3).get(len+2)) {
-                return true; 
-            }
-        }
-        if (c-2 > -1 && c+1 < 7 && len-2 > 0 && len+1 <= 6 && board.get(c-1).size() >= len+1 && board.get(c-2).size() >= len+2 && board.get(c+1).size() >= len-1) {
-            if (col.get(len-1) == board.get(c-1).get(len) && col.get(len-1) == board.get(c-2).get(len+1) && col.get(len-1) == board.get(c+1).get(len-2)) {
-                return true; 
-            }
-        }
-        if (c-1 > -1 && c+2 < 7 && len-1 > 0 && len+2 <= 6 && board.get(c-1).size() >= len+1 && board.get(c+1).size() >= len-1 && board.get(c+2).size() >= len-2) {
-            if (col.get(len-1) == board.get(c-1).get(len) && col.get(len-1) == board.get(c+1).get(len-2) && col.get(len-1) == board.get(c+2).get(len-3)) {
-                return true; 
-            }
-        }
-        if (c+3 > 7 && len+3 <= 6 && board.get(c+1).size() >= len-1 && board.get(c+2).size() >= len-2 && board.get(c+3).size() >= len-3) {
-            if (col.get(len-1) == board.get(c+1).get(len-2) && col.get(len-1) == board.get(c+2).get(len-3) && col.get(len-1) == board.get(c+3).get(len-4)) {
-                return true; 
-            }
-        }
-
+        
         return false; 
     }
 
