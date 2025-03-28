@@ -22,7 +22,7 @@ class Main {
             if (b.getMoveNum()%2 == 0) {
                 System.out.println("It is player one's turn! "); 
             } else {
-                System.out.println("Itis player two's turn! ");
+                System.out.println("It is player two's turn! ");
             }
             System.out.print("Where would you like to move? "); 
             int col = -1; 
@@ -63,7 +63,7 @@ class Board {
 
     //methods
     public void move (int col) {
-        if (board.get(col).size() < 7) {
+        if (board.get(col).size() < 6) {
             if (moveNum%2 == 0) {
                 board.get(col).add(0); 
             } else {
@@ -133,8 +133,9 @@ class Board {
         }
         
         //check diagonal /
-        int left = c, right = c; 
-        int col = c-1, row = len-2; 
+        left = c;
+        right = c; 
+        int col = c, row = len-1; 
         while (col >= 0 && row >= 0 && board.get(col).size() > row) {
             if (board.get(col).get(row) == board.get(c).get(len-1)) {
                 col--; 
@@ -144,6 +145,20 @@ class Board {
             }
         }
         left = col+1; 
+        col = c; 
+        row = len-1; 
+        while (col < 7 && row < 6 && board.get(col).size() > row) {
+            if (board.get(col).get(row) == board.get(c).get(len-1)) {
+                col++; 
+                row++; 
+            } else {
+                break; 
+            }
+        }
+        right = col-1; 
+        if (right - left >= 3) {
+            return true; 
+        }
         
         //check diagonal \
         
@@ -152,7 +167,7 @@ class Board {
 
     public void print() {
         System.out.println(); 
-        for (int row = 6; row >= 0; row--) {
+        for (int row = 5; row >= 0; row--) {
             for (int col = 0; col < 7; col++) {
                 if (row < board.get(col).size()) {
                     System.out.print(board.get(col).get(row) + " "); 
