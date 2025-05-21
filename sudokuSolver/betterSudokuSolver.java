@@ -50,6 +50,13 @@ class Main {
                         //remove from block
                         //b is which block it is
                         int b = (j/3)%3 + i/3;
+                        for (int k = 0; k < 9; k++) {
+                            int rNum = block[b][k][0]; 
+                            int cNum = block[b][k][1]; 
+                            if (rNum != i || cNum != j) {
+                                possible[rNum][cNum][(r%10)-1] = 0; 
+                            }
+                        }
                     }
                 }
                 r /= 10; 
