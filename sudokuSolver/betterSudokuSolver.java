@@ -91,31 +91,12 @@ class Main {
             return; 
         } 
         
-        for (int i = 0; i < 9; i++) {
-            printP(i); 
-            System.out.println("\n");
-        }
+        /*for (int i = 0; i < 9; i++) {
+            printP(i+1); 
+        }*/
         
-    }
-    
-    //prints sudoku
-    public static void print () {
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                System.out.print(sudoku[i][j] + " ");
-            }
-            System.out.println(); 
-        }
-    } 
-    
-    //prints possible
-    public static void printP (int val) {
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                System.out.print(possible[i][j][val] + " ");
-            }
-            System.out.println(); 
-        }
+        update(1); 
+        print(); 
     }
     
     //removes val from same row, col, and block
@@ -149,5 +130,88 @@ class Main {
             }
         }
         
+    }
+    
+    //prints sudoku
+    public static void print () {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                System.out.print(sudoku[i][j] + " ");
+            }
+            System.out.println(); 
+        }
+    } 
+    
+    //prints possible
+    public static void printP (int val) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                System.out.print(possible[i][j][val-1] + " ");
+            }
+            System.out.println(); 
+        }
+        System.out.println(); 
+    }
+    
+    //checks each row, col, and block for value that exists in one place, then updates if there is
+    public static boolean update (int val) {
+        printP(val); 
+        boolean out = false; 
+        boolean change = false; 
+        
+        do {
+            change = false; 
+            //updates row
+            int count = 0; 
+            int row = -1; 
+            int col = -1; 
+            for (int r = 0; r < 9; r++) {
+                count = 0; 
+                //counts number of val in the r-th row
+                for (int c = 0; c < 9; c++) {
+                    if (possible[r][c][val-1] != 0) {
+                        count++; 
+                        row = r; 
+                        col = c; 
+                    }
+                }
+                
+                //if there's only one count, update everything
+                if (count == 1) {
+                    change = true; 
+                    removeVals(val, row, col);
+                    sudoku[row][col] = val; 
+                } 
+            }
+            printP(val); 
+            
+            //updates col
+            for (int c = 0; c < 9; c++) {
+                System.out.println("column " + c);
+                printP(val); 
+                count = 0; 
+                //counts number of val in the c-th column
+                for (int r = 0; r < 9; r++) {
+                    if (possible[r][c][val-1] != 0) {
+                        count++; 
+                        row = r; 
+                        col = c; 
+                    }
+                }
+                
+                //if there's only one count, update everythign
+                if (count == 1) {
+                    change = true; 
+                    removeVals(val, row, col); 
+                    sudoku[row][col] = val; 
+                }
+            }
+            
+            //updates block
+            
+            out = out || change; 
+        } while (change == true); 
+        
+        return out; 
     }
 }
