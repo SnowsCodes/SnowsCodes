@@ -28,6 +28,7 @@ class Main {
                 }
             }
         }
+        printP(1); 
         
         //fill in initial values for sudoku and update possible
         //uncomment for loop after finishing program project
@@ -70,6 +71,11 @@ class Main {
                     sudoku[i][j] = r%10; 
                     //only remove values if the input isn't 0
                     if (r%10 != 0) {
+                        //testing, delete later
+                        if (r%10 == 1) {
+                            print(); 
+                            System.out.println(); 
+                        }
                         removeVals(r%10, i, j); 
                     }
                 }
@@ -103,8 +109,10 @@ class Main {
     public static void removeVals (int val, int row, int col) {
         //remove all vals from current position 
         for (int i = 0; i < 9; i++) {
-            possible[row][col][i] = 0; 
+            possible[row][col][i] = -2; 
         }
+        possible[row][col][val-1] = -1;
+        //printP(1); 
         
         //remove from row
         for (int c = 0; c < 9; c++) {
@@ -121,7 +129,7 @@ class Main {
         }
         
         //remove from block
-        int b = (col/3)%3 + row/3; 
+        int b = (col/3)%3 + (row/3)*3; 
         for (int i = 0; i < 9; i++) {
             int r = block[b][i][0]; 
             int c = block[b][i][1]; 
@@ -129,7 +137,6 @@ class Main {
                 possible[r][c][val-1] = 0; 
             }
         }
-        
     }
     
     //prints sudoku
@@ -146,6 +153,9 @@ class Main {
     public static void printP (int val) {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
+                if (possible[i][j][val-1] > -1) {
+                    System.out.print(" ");
+                }
                 System.out.print(possible[i][j][val-1] + " ");
             }
             System.out.println(); 
@@ -169,7 +179,7 @@ class Main {
                 count = 0; 
                 //counts number of val in the r-th row
                 for (int c = 0; c < 9; c++) {
-                    if (possible[r][c][val-1] != 0) {
+                    if (possible[r][c][val-1] == val) {
                         count++; 
                         row = r; 
                         col = c; 
@@ -183,7 +193,8 @@ class Main {
                     sudoku[row][col] = val; 
                 } 
             }
-            printP(val); 
+            //printP(val);
+            //print(); 
             
             //updates col
             for (int c = 0; c < 9; c++) {
@@ -192,7 +203,7 @@ class Main {
                 count = 0; 
                 //counts number of val in the c-th column
                 for (int r = 0; r < 9; r++) {
-                    if (possible[r][c][val-1] != 0) {
+                    if (possible[r][c][val-1] == val) {
                         count++; 
                         row = r; 
                         col = c; 
@@ -206,6 +217,8 @@ class Main {
                     sudoku[row][col] = val; 
                 }
             }
+            //printP(val);
+            //print(); 
             
             //updates block
             
