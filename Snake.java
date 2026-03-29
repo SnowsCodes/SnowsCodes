@@ -241,8 +241,21 @@ class Board {
 
             if (!backtrack) {
                 String[] aaaaa = new String[]{"right", "up", "left", "down"}; 
-                System.out.println(aaaaa[dirs[0]]); 
-                s.changeDir(dirs[0]); 
+                int choose = 0; 
+                for (int i = 0; i < 3; i++) {
+                    boolean collides = false; 
+                    for (int j = 0; j < currentPath.size(); j++) {
+                        if (currentPath.get(j)[0] == priority[i][0] && currentPath.get(j)[1] == priority[i][1]) {
+                            collides = true; 
+                        }
+                    }
+                    if (!collides) {
+                        choose = i; 
+                        break; 
+                    }
+                }
+                System.out.println(aaaaa[dirs[choose]]); 
+                s.changeDir(dirs[choose]); 
             }
         //}
     }
