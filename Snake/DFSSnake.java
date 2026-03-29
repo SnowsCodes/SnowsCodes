@@ -1,3 +1,10 @@
+/*
+*
+*  This project is unfinished. I just want to save my attempt of the snake game using DFS
+*  It only looks 1 step ahead, and I realized using BFS is better while testing
+*
+*/
+
 import java.util.ArrayList; 
 import java.util.Random; 
 import java.time.LocalTime;
