@@ -1,6 +1,7 @@
 import java.util.ArrayList; 
 import java.util.Random; 
 import java.time.LocalTime;
+import java.util.LinkedList; 
 
 class Board {
     //static variables
@@ -42,6 +43,7 @@ class Board {
     public void print () {
         //this for pathfinding
         findPath(); 
+        System.out.println("score: " + (s.getPos().size() - 4)); 
 
 
         for (int i = 0; i < b.length; i++) {
@@ -194,24 +196,24 @@ class Board {
 
             if (dists[0] < 0 || (dists[0] < dists[1] && dists[0] < dists[2]))  {
                 if (dists[2] < dists[1]) {
-                    dirs = new int[]{0, 2, 1}; 
+                    dirs = new int[]{d, (d+3)%4, (d+1)%4}; 
                     int[] temp = new int[]{priority[2][0], priority[2][1]}; 
                     priority[2] = priority[1]; 
                     priority[1] = temp; 
                 } else {
-                    dirs = new int[]{0, 1, 2}; 
+                    dirs = new int[]{d, (d+1)%4, (d+3)%4}; 
                 }
             } else if (dists[1] < dists[0] && dists[1] < dists[2]) {
                 //first should be 1
                 if (dists[0] < dists[2]) {
                     //order: 1 0 2
-                    dirs = new int[]{1, 0, 2}; 
+                    dirs = new int[]{(d+1)%4, d, (d+3)%4}; 
                     int[] temp = new int[]{priority[0][0], priority[0][1]}; 
                     priority[0] = priority[1]; 
                     priority[1] = temp; 
                 } else {
                     //order: 1 2 0
-                    dirs = new int[]{1, 2, 0}; 
+                    dirs = new int[]{(d+1)%4, (d+3)%4, d}; 
                     int[] temp = new int[]{priority[0][0], priority[0][1]}; 
                     priority[0] = priority[1]; 
                     priority[1] = priority[2]; 
@@ -221,14 +223,14 @@ class Board {
                 //first should be 2
                 if (dists[0] < dists[1]) {
                     //order: 2 0 1
-                    dirs = new int[]{2, 0, 1}; 
+                    dirs = new int[]{(d+3)%4, d, (d+1)%4}; 
                     int[] temp = new int[]{priority[0][0], priority[0][1]}; 
                     priority[0] = priority[2]; 
                     priority[2] = priority[1]; 
                     priority[1] = temp; 
                 } else {
                     //order: 2 1 0
-                    dirs = new int[]{2, 1, 0}; 
+                    dirs = new int[]{(d+3)%4, (d+1)%4, d}; 
                     int[] temp = new int[]{priority[0][0], priority[0][1]}; 
                     priority[0] = priority[2]; 
                     priority[2] = temp; 
@@ -238,6 +240,8 @@ class Board {
             System.out.printf("current: %d, %d\nbest: %d, %d\t2nd: %d, %d\t3rd: %d, %d\n", head[1], head[0], priority[0][1], priority[0][0], priority[1][1], priority[1][0], priority[2][1], priority[2][0]); 
 
             if (!backtrack) {
+                String[] aaaaa = new String[]{"right", "up", "left", "down"}; 
+                System.out.println(aaaaa[dirs[0]]); 
                 s.changeDir(dirs[0]); 
             }
         //}
@@ -265,7 +269,7 @@ class Snake {
     private static String[] d = new String[]{"right", "up", "left", "down"}; 
 
     //front of arraylist is the head, back of arraylist is the tail
-    private ArrayList<int[]> pos = new ArrayList<>(); 
+    private LinkedList<int[]> pos = new LinkedList<>(); 
     //direction, 0 = right, 1 = up, 2 = left, 3 = down
     private int dir = 0; 
 
@@ -282,7 +286,7 @@ class Snake {
     }
 
     public ArrayList<int[]> getPos () {
-        return pos; 
+        return new ArrayList<int[]>(pos); 
     }
 
     public int[] getHead () {
@@ -352,13 +356,15 @@ class Main {
 
         //simulate! 
         LocalTime now = LocalTime.now(); 
-        LocalTime update = LocalTime.now().plusNanos(500000000); 
+        //LocalTime update = LocalTime.now().plusNanos(500000000); 
+        //20 frames/second
+        LocalTime update = LocalTime.now().plusNanos(50000000); 
         while (true) {
             now = LocalTime.now(); 
             if (now.isAfter(update)) {
                 snakeBoard.next(); 
                 snakeBoard.print(); 
-                update = LocalTime.now().plusNanos(500000000); 
+                update = LocalTime.now().plusNanos(50000000); 
                 if (snakeBoard.gameEnded()) {
                     break; 
                 }
