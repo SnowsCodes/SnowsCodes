@@ -118,6 +118,7 @@ class Board {
         //change directions based on pathfinding
         if (pDirs.size() > 0) {
             currentSnake.changeDir(pDirs.getFirst()); 
+            pDirs.removeFirst(); 
         }
 
         //moves the snake to the next state, and stores whether the apple got eaten
