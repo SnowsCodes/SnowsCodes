@@ -42,7 +42,7 @@ class Board {
         apple = new int[]{yPos, (c - xPos)}; 
 
         //find starting path (always just goes right)
-        pDirs = new LinkedList<>(); 
+        pDirs = new ArrayDeque<Integer>(); 
         for (int i = 0; i < (c - xPos - xPos); i++) {
             pDirs.add(0); 
         }
@@ -176,7 +176,7 @@ class Board {
         }
 
         //pathfind and save in pDirs
-        findPath(currentSnake.getPos(), apple); 
+        findPath(currentSnake, apple); 
         
         //update board
         updateBoard(); 
@@ -195,7 +195,7 @@ class Board {
         ArrayList<ArrayDeque<Integer>> dirBranches = new ArrayList<>(); 
         
         snakeBranches.add(needToBeClonedSnake.clone()); 
-        dirBranches.add(new ArrayDeque<Integer>); 
+        dirBranches.add(new ArrayDeque<Integer>()); 
 
         //while loop to find the path T-T
         while (true) {
@@ -208,6 +208,8 @@ class Board {
             //the following for loop goes through every branch in snakeBranches, branches the snakes, 
             //and adds them to nextSnakeBranches and/or appleSnake accordingly, and in the correct order
 
+            //counter of index of the snake
+            int c = 0; 
             for (Snake branchedSnake : snakeBranches) {
                 //for each snake in snakeBranches
                 ArrayList<Snake> sBranches = new ArrayList<>(); 
@@ -218,24 +220,29 @@ class Board {
                 for (int i = -1; i < 2; i++) {
                     int tempDir = (ogDir + i + 4) % 4; //the actual direction its going
                     Snake temp = branchedSnake.clone(); 
+                    ArrayDeque<Integer> tempDirs = dirBranches.get(c).clone(); 
+                    
+                    //advances the snake in specified direction
                     temp.changeDir(tempDir); 
+                    boolean eatsApple = temp.next(applePos); 
+                    tempDirs.add(tempDir); 
                     //if the copy eats the apple, add it to appleSnake & appleDir, otherwise add it to sBranches and dBranches
                     //note: if it eats an apple, it is guarentee not to crash into itself
-                    boolean eatsApple = temp.next(applePos); 
                     if (eatsApple) {
                         appleSnake.add(temp); 
-                        appleDir.add(tempDir); 
+                        appleDir.add(tempDirs); 
                     } else {
                         sBranches.add(temp); 
-                        dBranches.add(tempDir); 
+                        dBranches.add(tempDirs); 
                     }
                 }
-
+                
+                
                 //check if any snakes died, if yes, ELIMINATE THEM
                 for (int i = sBranches.size() - 1; i >= 0; i--) {
                     Snake temp = sBranches.get(i); 
                     int[] head = temp.getHead(); 
-                    Iterator it = temp.getPos().iterator(); 
+                    Iterator<int[]> it = temp.getPos().iterator(); 
                     boolean isDead = false; 
 
                     int[] tempBody = it.next(); 
@@ -260,6 +267,9 @@ class Board {
                 while (sBranches.size() > 0) {
                     //INCOMPLETE
                 }
+
+                //increase counter
+                c++; 
             }
             
             //for each snake that reaches apple
@@ -272,7 +282,7 @@ class Board {
             //find the snake(s) with the minimum amount of turns (in appleDir), and delete the snakes that are longer than the minimum
             //set pDirs (pathDirections) to corresponding path of the first snake in reachesApple
             //break from while loop! because the path has been found!!!!!!!
-            break
+            break; 
         }
     }
 }
@@ -291,7 +301,7 @@ class Snake {
 
     //used for the clone method
     public Snake(LinkedList<int[]> sPos) {
-        pos = new (LinkedList) sPos.clone(); 
+        pos = (LinkedList) sPos.clone(); 
     }
 
     public void print() {
