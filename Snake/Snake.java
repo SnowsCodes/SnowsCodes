@@ -2,6 +2,7 @@ import java.util.LinkedList;
 import java.time.LocalTime;  
 import java.util.Iterator;
 import java.util.ArrayDeque; 
+import java.util.ArrayList; 
 
 
 class Board {
@@ -185,7 +186,7 @@ class Board {
         return gameEnd; 
     }
 
-    //NEEDS WRITING
+    //INCOMPLETE
     //takes in linked list (snake pos) and apple pos
     //finds path using bfs to apple, dfs(a*) from apple to tail
     //directly modifies pDirs (acts as the return value)
@@ -196,28 +197,82 @@ class Board {
         snakeBranches.add(needToBeClonedSnake.clone()); 
         dirBranches.add(new ArrayDeque<Integer>); 
 
-        //fun while looop
+        //while loop to find the path T-T
         while (true) {
             ArrayList<Snake> nextSnakeBranches = new ArrayList<>(); 
-            AraryList<ArrayDeque<Integer>> nextDirBranches = new ArrayList<>(); 
-            //create new ArrayList for the storage of the next step
-            //for each snake in snakeBranches
-                //make a copy that goes left, straight, and right
-                //check if any snakes died, if yes, ELIMINATE THEM
-                //order remaining snakes based on how much closer the snake gets (if theres a tie, the one with fewer turns wins)
-                //add the ordered snakes to nextSnakeBranch and the corresponding path to nextDirBranches
-            
-            ArrayList<Integer> reachesApple = new ArrayList<>(); 
-            //for each snake in nextSnakeBranch
-                //check if the snake eats an apple, else continue
-                //check (using a*) if there is a path to that snake's tail, else continue
-                //add snake's index to reachesApple
-            //if reachesApple is empty, set snakeBranches as nextSnakeBranches and dirBranches as nextDirBranches, then continue
+            ArrayList<ArrayDeque<Integer>> nextDirBranches = new ArrayList<>(); 
 
-            //note: the following code only runs if reachesApple is not empty
-            //find the snake(s) with the minimum amount of turns, and delete them from reachesApple if it is more than minimum
+            ArrayList<Snake> appleSnake = new ArrayList<>(); 
+            ArrayList<ArrayDeque<Integer>> appleDir = new ArrayList<>(); 
+
+            //the following for loop goes through every branch in snakeBranches, branches the snakes, 
+            //and adds them to nextSnakeBranches and/or appleSnake accordingly, and in the correct order
+
+            for (Snake branchedSnake : snakeBranches) {
+                //for each snake in snakeBranches
+                ArrayList<Snake> sBranches = new ArrayList<>(); 
+                ArrayList<ArrayDeque<Integer>> dBranches = new ArrayList<>(); 
+
+                //make a copy that goes left, straight, and right in that order
+                int ogDir = branchedSnake.getDir(); 
+                for (int i = -1; i < 2; i++) {
+                    int tempDir = (ogDir + i + 4) % 4; //the actual direction its going
+                    Snake temp = branchedSnake.clone(); 
+                    temp.changeDir(tempDir); 
+                    //if the copy eats the apple, add it to appleSnake & appleDir, otherwise add it to sBranches and dBranches
+                    //note: if it eats an apple, it is guarentee not to crash into itself
+                    boolean eatsApple = temp.next(applePos); 
+                    if (eatsApple) {
+                        appleSnake.add(temp); 
+                        appleDir.add(tempDir); 
+                    } else {
+                        sBranches.add(temp); 
+                        dBranches.add(tempDir); 
+                    }
+                }
+
+                //check if any snakes died, if yes, ELIMINATE THEM
+                for (int i = sBranches.size() - 1; i >= 0; i--) {
+                    Snake temp = sBranches.get(i); 
+                    int[] head = temp.getHead(); 
+                    Iterator it = temp.getPos().iterator(); 
+                    boolean isDead = false; 
+
+                    int[] tempBody = it.next(); 
+                    while (it.hasNext()) {
+                        tempBody = it.next(); 
+                        if (tempBody[0] == head[0] && tempBody[1] == head[1]) {
+                            isDead = true; 
+                            break; 
+                        }
+                    }
+
+                    if (isDead) {
+                        sBranches.remove(i); 
+                        dBranches.remove(i); 
+                    }
+                }
+
+                //add the snake that is closest to the apple to nextSnakeBranches
+                //(if there's a tie, choose the one that goes straight to minimize turns)
+                //remove that snake from the lists then repeat until there are no more snakes in sBranches
+                //note: there is a maximum of 3 snakes in sBranches
+                while (sBranches.size() > 0) {
+                    //INCOMPLETE
+                }
+            }
+            
+            //for each snake that reaches apple
+                //check (using a*) if there is a path to that snake's tail
+                //if there isn't, remove that snake (and it's associated path) from the apple arraylists
+            
+            //if the apple arraylists are empty, continue the while loop
+
+            //(because of the previous step, the following code only runs if reachesApple is not empty)
+            //find the snake(s) with the minimum amount of turns (in appleDir), and delete the snakes that are longer than the minimum
             //set pDirs (pathDirections) to corresponding path of the first snake in reachesApple
-            //break from while loop!!!!!!! 
+            //break from while loop! because the path has been found!!!!!!!
+            break
         }
     }
 }
@@ -236,7 +291,7 @@ class Snake {
 
     //used for the clone method
     public Snake(LinkedList<int[]> sPos) {
-        pos = (LinkedList) sPos.clone(); 
+        pos = new (LinkedList) sPos.clone(); 
     }
 
     public void print() {
@@ -261,6 +316,10 @@ class Snake {
 
     public void changeDir(int direction) {
         dir = direction; 
+    }
+
+    public int getDir() {
+        return dir; 
     }
 
     public Snake clone() {
