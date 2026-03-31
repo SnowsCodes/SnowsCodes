@@ -1,7 +1,7 @@
 import java.util.LinkedList; 
-import java.time.LocalTime; 
-import java.util.Arrays; 
+import java.time.LocalTime;  
 import java.util.Iterator;
+import java.util.ArrayDeque; 
 
 
 class Board {
@@ -23,7 +23,7 @@ class Board {
 
     //for pathfinding
     //private LinkedList<int[]> path; 
-    private LinkedList<Integer> pDirs; 
+    private ArrayDeque<Integer> pDirs; 
 
     //constructor
     public Board(int r, int c) {
@@ -187,15 +187,42 @@ class Board {
 
     //NEEDS WRITING
     //takes in linked list (snake pos) and apple pos
+    //finds path using bfs to apple, dfs(a*) from apple to tail
     //directly modifies pDirs (acts as the return value)
-    private void findPath(LinkedList snakePos, int[] applePos) {
+    private void findPath(Snake needToBeClonedSnake, int[] applePos) {
+        ArrayList<Snake> snakeBranches = new ArrayList<>(); 
+        ArrayList<ArrayDeque<Integer>> dirBranches = new ArrayList<>(); 
         
+        snakeBranches.add(needToBeClonedSnake.clone()); 
+        dirBranches.add(new ArrayDeque<Integer>); 
+
+        //fun while looop
+        while (true) {
+            ArrayList<Snake> nextSnakeBranches = new ArrayList<>(); 
+            AraryList<ArrayDeque<Integer>> nextDirBranches = new ArrayList<>(); 
+            //create new ArrayList for the storage of the next step
+            //for each snake in snakeBranches
+                //make a copy that goes left, straight, and right
+                //check if any snakes died, if yes, ELIMINATE THEM
+                //order remaining snakes based on how much closer the snake gets (if theres a tie, the one with fewer turns wins)
+                //add the ordered snakes to nextSnakeBranch and the corresponding path to nextDirBranches
+            
+            ArrayList<Integer> reachesApple = new ArrayList<>(); 
+            //for each snake in nextSnakeBranch
+                //check if the snake eats an apple, else continue
+                //check (using a*) if there is a path to that snake's tail, else continue
+                //add snake's index to reachesApple
+            //if reachesApple is empty, set snakeBranches as nextSnakeBranches and dirBranches as nextDirBranches, then continue
+
+            //note: the following code only runs if reachesApple is not empty
+            //find the snake(s) with the minimum amount of turns, and delete them from reachesApple if it is more than minimum
+            //set pDirs (pathDirections) to corresponding path of the first snake in reachesApple
+            //break from while loop!!!!!!! 
+        }
     }
 }
 
 class Snake {
-    private static String[] d = new String[]{"right", "up", "left", "down"}; 
-
     //front of linkedlist is head, back of linkedlist is tail
     private LinkedList<int[]> pos = new LinkedList<>(); 
     //direction, 0 = right, 1 = up, 2 = left, 3 = down
@@ -205,6 +232,11 @@ class Snake {
         for (int i = 0; i < sPos.length; i++) {
             pos.add(sPos[i]); 
         }
+    }
+
+    //used for the clone method
+    public Snake(LinkedList<int[]> sPos) {
+        pos = (LinkedList) sPos.clone(); 
     }
 
     public void print() {
@@ -229,6 +261,14 @@ class Snake {
 
     public void changeDir(int direction) {
         dir = direction; 
+    }
+
+    public Snake clone() {
+        //create a copy (has same position)
+        Snake out = new Snake(pos); 
+        //change the direction to also match
+        out.changeDir(dir); 
+        return out; 
     }
 
     //advances snake in the direction of dir
@@ -260,13 +300,13 @@ class Main {
         //simulate! 
         LocalTime now = LocalTime.now(); 
         //20 frames/second
-        LocalTime update = LocalTime.now().plusNanos(50000000); 
+        LocalTime update = LocalTime.now().plusNanos(50_000_000); 
         while (true) {
             now = LocalTime.now(); 
             if (now.isAfter(update)) {
                 snakeBoard.next(); 
                 snakeBoard.print(); 
-                update = LocalTime.now().plusNanos(50000000); 
+                update = LocalTime.now().plusNanos(50_000_000); 
                 if (snakeBoard.gameEnded()) {
                     break; 
                 }
