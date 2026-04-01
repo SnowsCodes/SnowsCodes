@@ -188,7 +188,7 @@ class Board {
 
     // INCOMPLETE
     // takes in linked list (snake pos) and apple pos
-    // finds path using bfs to apple, dfs(a*) from apple to tail
+    // finds path using bfs to apple, dfs from apple to tail
     // directly modifies pDirs (acts as the return value)
     private void findPath(Snake needToBeClonedSnake, int[] applePos) {
         ArrayList<Snake> snakeBranches = new ArrayList<>(); 
@@ -300,7 +300,7 @@ class Board {
                 boolean backtrack = false; 
                 boolean reachesApple = false; 
 
-                // check (using a*) if there is a path to that snake's tail
+                // check (using dfs) if there is a path to that snake's tail
                 while (true) {
                     int wrongDir = aDirs.get(aDirs.size() - 1); // only used when it's backtracking
                     if (backtrack) {
