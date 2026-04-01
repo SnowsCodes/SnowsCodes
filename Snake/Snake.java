@@ -205,11 +205,9 @@ class Board {
             ArrayList<Snake> appleSnake = new ArrayList<>(); 
             ArrayList<ArrayDeque<Integer>> appleDir = new ArrayList<>(); 
 
-            // the following for loop goes through every branch in snakeBranches, branches the snakes, 
+            // goes through every branch in snakeBranches, branches the snakes, 
             // and adds them to nextSnakeBranches and/or appleSnake accordingly, and in the correct order
-
-            // counter of index of the snake (too lazy to change the for each loop into a for loop)
-            int c = 0; 
+            int c = 0; // counter of index of the snake (too lazy to change the for each loop into a for loop)
             for (Snake branchedSnake : snakeBranches) {
                 // for each snake in snakeBranches
                 ArrayList<Snake> sBranches = new ArrayList<>(); 
@@ -291,15 +289,139 @@ class Board {
                 c++; 
             }
             
-            // for each snake that reaches apple
+            // of the snakes that reach the apple, remove the ones that do not have a path to its tail
+            for (int i = appleSnake.size() - 1; i >= 0; i--) {
+                // for each snake that reaches apple (aPos = apple snake's position)
+                LinkedList<int[]> aPos = appleSnake.get(i).clone().getPos(); 
+                ArrayList<Integer> aDirs = new ArrayList<>(); 
+                aDirs.add(appleSnake.get(i).getDir()); 
+                int[] target = aPos.getLast(); 
+                int startingLen = aPos.size(); 
+                boolean backtrack = false; 
+                boolean reachesApple = false; 
+
                 // check (using a*) if there is a path to that snake's tail
+                while (true) {
+                    int wrongDir = aDirs.get(aDirs.size() - 1); // only used when it's backtracking
+                    if (backtrack) {
+                        aPos.removeFirst(); 
+                        aDirs.remove(aDirs.size() - 1); 
+                    }
+                    int[] head = aPos.getFirst(); 
+                    int forward = aDirs.get(aDirs.size() - 1); 
+
+                    int[][] aNext = new int[3][2]; 
+                    int[] dirWent = new int[3]; 
+                    int[] dist = new int[3]; 
+                    // adds in the order of left, straight, right
+                    // also stores the (Manhattan) distance to tail in dist
+                    for (int j = 0; j < aNext.length; j++) {
+                        int dir = (forward + (j-1) + 4) % 4; 
+                        dirWent[j] = dir; 
+                        aNext[j] = (dir == 0)? new int[]{head[0], (head[1] + 1)} : // right
+                                   (dir == 1)? new int[]{(head[0] - 1), head[1]} : // up
+                                   (dir == 2)? new int[]{head[0], (head[1] - 1)} : new int[]{(head[0] + 1), head[1]}; // left, down
+                        dist[j] = Math.abs(aNext[j][0] - target[0]) + Math.abs(aNext[j][1] - target[1]); 
+                    }
+
+                    // check if any path reaches an apple, if one does, break the while loop
+                    // and set reachesApple to true to go check if the next snake can reach the apple
+                    for (int j = 0; j < dist.length; j++) {
+                        if (dist[j] == 0) {
+                            reachesApple = true; 
+                            break; 
+                        }
+                    }
+                    if (reachesApple) {
+                        break; 
+                    }
+
+                    // for each snake, check if they hit themselves/the wall
+                    // if yes, set their distance to -1 
+                    for (int j = 0; j < aNext.length; j++) {
+                        head = aNext[j]; // reusing head because it has served its purpose
+                        // check if hit wall
+                        if (head[0] < 0 || head[1] < 0 || head[0] >= numRow || head[1] >= numCol) {
+                            dist[j] = -1; 
+                            continue; 
+                        }
+                        // check if hit self
+                        for (int k = 0; k < startingLen-1; k++) {
+                            int[] bodyPart = aPos.get(k); 
+                            if (bodyPart[0] == head[0] && bodyPart[1] == head[1]) {
+                                dist[j] = -1; 
+                                break; 
+                            }
+                        }
+                    }
+
+                    // order the snakes based on how close they are to the apple (exclude ones with -1 distance)
+                    // value in order represents the index of the snake/dirWent/dist
+                    ArrayList<Integer> order = new ArrayList<>(); 
+                    for (int j = 0; j < dist.length; j++) {
+                        if (dist[j] == -1) {
+                            continue; 
+                        }
+                        boolean added = false; 
+                        for (int k = 0; k < order.size(); k++) {
+                            if (dist[j] < dist[order.get(k)]) {
+                                order.add(k, j); 
+                                added = true; 
+                            }
+                        }
+                        if (!added) {
+                            order.add(j); 
+                        }
+                    }
+
+                    // backtrack if: 
+                    // there's nothing in order OR
+                    // the last element in order corresponds to the same direction as the wrong direction
+                    int last = order.size()-1; 
+                    if ((order.size() == 0) || (backtrack && dirWent[order.get(last)] == wrongDir)) {
+                        backtrack = true; 
+                        aPos.removeFirst(); 
+                        aDirs.remove(aDirs.size() - 1); 
+                    } 
+
+                    // if there is no backtrack, determine which direction to go based on order
+                    int orderIndex = -1; 
+                    if (backtrack) {
+                        for (int j = 0; j < order.size(); j++) {
+                            if (dirWent[order.get(j)] == wrongDir) {
+                                orderIndex = j; 
+                                break; 
+                            }
+                        }
+                    }
+                    orderIndex += 1; 
+
+                    // advance in the direction that orderIndex determines! 
+                    aPos.addFirst(aNext[order.get(orderIndex)]); 
+                    aDirs.add(dirWent[order.get(orderIndex)]); 
+
+                    // set backtrack as false (because we're not backtracking)
+                    backtrack = false; 
+                }
+
                 // if there isn't, remove that snake (and it's associated path) from the apple arraylists
+                if (!reachesApple) {
+                    appleSnake.remove(i); 
+                    appleDir.remove(i); 
+                }
+            }
+            
             
             // if the apple arraylists are empty, continue the while loop
+            if (appleSnake.size() == 0) {
+                snakeBranches = nextSnakeBranches; 
+                dirBranches = nextDirBranches; 
+            }
 
-            // (because of the previous step, the following code only runs if reachesApple is not empty)
-            // find the snake(s) with the minimum amount of turns (in appleDir), and delete the snakes that are longer than the minimum
-            // set pDirs (pathDirections) to corresponding path of the first snake in reachesApple
+            // (because of the previous step, the following code only runs if apple arraylists aren't empty)
+            // find the snake(s) with the minimum amount of turns (in appleDir)
+            // and delete the snakes that are longer than the minimum
+            // set pDirs (pathDirections) to corresponding path of the first snake in appleDir
             // break from while loop! because the path has been found!!!!!!!
             break; 
         }
