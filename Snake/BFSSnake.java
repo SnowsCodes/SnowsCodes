@@ -1,3 +1,13 @@
+/*
+* 
+* This project is unfinished. I just want to save my attempt of the snake game using BFS
+* It runs out of memory (because its BFS), sometimes have index out of bound errors? and also sometimes it doesn't choose the best path
+* I'm going to use a* to do the snake game now
+* 
+*/
+
+
+
 import java.util.LinkedList; 
 import java.time.LocalTime;  
 import java.util.Iterator;
@@ -50,7 +60,7 @@ class Board {
 
     // update the values of gameBoard using the position of currentSnake and apple
     // always gets called at the end of next
-    private void updateBoard() {
+    private void updateBoard() { 
         // reset values of gameBoard
         for (int i = 0; i < gameBoard.length; i++) {
             for (int j = 0; j < gameBoard[0].length; j++) {
@@ -68,7 +78,8 @@ class Board {
             // define prev and next based on whether they exist
             if (i != 0) {
                 prev = pos.get(i-1); 
-            } else if (i != pos.size() - 1) {
+            } 
+            if (i != pos.size() - 1) {
                 next = pos.get(i+1); 
             }
 
@@ -80,9 +91,9 @@ class Board {
                 val = (point[0] > next[0])? 7 : 
                       (point[1] < next[1])? 8 :
                       (point[0] < next[0])? 9 : 10; 
-            } else if (i != pos.size() - 1) {
+            } else if (i == pos.size() - 1) {
                 // case: the last segment of the tail
-                val = (point[0] == next[0])? 1 : 2; 
+                val = (point[0] == prev[0])? 1 : 2; 
             } else {
                 // case: middle parts of the snake
                 val = (prev[0] == next[0])? 1 :
@@ -119,8 +130,6 @@ class Board {
         }
         System.out.println("\n"); 
 
-
-        
         // check if method is called when the game is already over
         if (gameEnd) {
             System.out.println("The game had ended."); 
@@ -193,7 +202,7 @@ class Board {
         if (eatApple) {
             //System.out.println("YAY PATHFIND"); 
             findPath(currentSnake, apple); 
-        }        
+        }
     }
 
     public boolean gameEnded() {
@@ -268,11 +277,18 @@ class Board {
                 for (int i = sBranches.size() - 1; i >= 0; i--) {
                     Snake temp = sBranches.get(i); 
                     int[] head = temp.getHead(); 
-                    Iterator<int[]> it = temp.getPos().iterator(); 
                     boolean isDead = false; 
 
+                    // check for hitting wall
+                    if (head[0] < 0 || head[1] < 0 || head[0] > numRow || head[1] > numCol) {
+                        isDead = true; 
+                    }
+
+                    // check for hitting self
+                    Iterator<int[]> it = temp.getPos().iterator(); 
+
                     int[] tempBody = it.next(); 
-                    while (it.hasNext()) {
+                    while (!isDead && it.hasNext()) { // this doesn't run if it hits the wall
                         tempBody = it.next(); 
                         if (tempBody[0] == head[0] && tempBody[1] == head[1]) {
                             isDead = true; 
