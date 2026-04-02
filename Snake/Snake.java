@@ -111,6 +111,16 @@ class Board {
     }
 
     public void next() {
+        //prints the current path
+        Iterator<Integer> printPath = pDirs.clone().iterator(); 
+        System.out.println("Path: "); 
+        while (printPath.hasNext()) {
+            System.out.print(printPath.next() + " "); 
+        }
+        System.out.println("\n"); 
+
+
+        
         // check if method is called when the game is already over
         if (gameEnd) {
             System.out.println("The game had ended."); 
@@ -175,18 +185,21 @@ class Board {
             }
         }
 
-        // pathfind and save in pDirs
-        findPath(currentSnake, apple); 
-        
         // update board
         updateBoard(); 
+        print(); 
+
+        // pathfind and save in pDirs
+        if (eatApple) {
+            //System.out.println("YAY PATHFIND"); 
+            findPath(currentSnake, apple); 
+        }        
     }
 
     public boolean gameEnded() {
         return gameEnd; 
     }
 
-    // INCOMPLETE
     // takes in linked list (snake pos) and apple pos
     // finds path using bfs to apple, dfs from apple to tail
     // directly modifies pDirs (acts as the return value)
@@ -199,6 +212,21 @@ class Board {
 
         // while loop to find the path T-T
         while (true) {
+            //print path so ik how the calculation is going
+            /*
+            for (ArrayDeque<Integer> printPath : dirBranches) {
+                ArrayDeque<Integer> putBack = new ArrayDeque<Integer>(); 
+                Iterator<Integer> pathIter = printPath.iterator(); 
+                
+                while(pathIter.hasNext()) {
+                    int nextThenPutBack = pathIter.next(); 
+                    System.out.print(nextThenPutBack + " "); 
+                    putBack.add(nextThenPutBack); 
+                }
+                System.out.println(); 
+                printPath = putBack; 
+            }*/
+
             ArrayList<Snake> nextSnakeBranches = new ArrayList<>(); 
             ArrayList<ArrayDeque<Integer>> nextDirBranches = new ArrayList<>(); 
 
@@ -289,6 +317,7 @@ class Board {
                 c++; 
             }
             
+            //System.out.println("num that reaches apple: " + appleSnake.size()); 
             // of the snakes that reach the apple, remove the ones that do not have a path to its tail
             for (int i = appleSnake.size() - 1; i >= 0; i--) {
                 // for each snake that reaches apple (aPos = apple snake's position)
@@ -302,6 +331,12 @@ class Board {
 
                 // check (using dfs) if there is a path to that snake's tail
                 while (true) {
+                    /*for (int j = 0; j < aDirs.size(); j++) {
+                        System.out.print(aDirs.get(j) + " "); 
+                    }
+                    System.out.println(); */
+
+
                     int wrongDir = aDirs.get(aDirs.size() - 1); // only used when it's backtracking
                     if (backtrack) {
                         aPos.removeFirst(); 
@@ -367,6 +402,7 @@ class Board {
                             if (dist[j] < dist[order.get(k)]) {
                                 order.add(k, j); 
                                 added = true; 
+                                break; 
                             }
                         }
                         if (!added) {
@@ -416,12 +452,39 @@ class Board {
             if (appleSnake.size() == 0) {
                 snakeBranches = nextSnakeBranches; 
                 dirBranches = nextDirBranches; 
+                continue; 
             }
 
             // (because of the previous step, the following code only runs if apple arraylists aren't empty)
-            // find the snake(s) with the minimum amount of turns (in appleDir)
-            // and delete the snakes that are longer than the minimum
-            // set pDirs (pathDirections) to corresponding path of the first snake in appleDir
+            // find the number of turns for each snake (and find the minimum number of turns)
+            int[] numTurns = new int[appleSnake.size()]; 
+            int min = numRow * numCol; //guarantees it'll be overwritten by the first snake
+            for (int i = 0; i < appleDir.size(); i++) {
+                int turn = 0; 
+                Iterator<Integer> dirs = appleDir.get(i).iterator(); 
+                //prev direction
+                int pDir = dirs.next(); 
+                while (dirs.hasNext()) {
+                    int cDir = dirs.next(); 
+                    if (pDir != cDir) {
+                        turn++; 
+                    }
+                    pDir = cDir; 
+                }
+                numTurns[i] = turn; 
+                if (turn < min) {
+                    min = turn; 
+                }
+            }
+
+            // select the first snake that has the minimum turns and set pDirs to the snake's corresponding path
+            for (int i = 0; i < appleDir.size(); i++) {
+                if (numTurns[i] == min) {
+                    pDirs = appleDir.get(i); 
+                    break; 
+                }
+            }
+            
             // break from while loop! because the path has been found!!!!!!!
             break; 
         }
@@ -512,12 +575,13 @@ class Main {
         // simulate! 
         LocalTime now = LocalTime.now(); 
         // 20 frames/second
-        LocalTime update = LocalTime.now().plusNanos(50_000_000); 
+        //LocalTime update = LocalTime.now().plusNanos(50_000_000); 
+        LocalTime update = LocalTime.now().plusNanos(100_000_000); 
         while (true) {
             now = LocalTime.now(); 
             if (now.isAfter(update)) {
                 snakeBoard.next(); 
-                snakeBoard.print(); 
+                //snakeBoard.print(); 
                 update = LocalTime.now().plusNanos(50_000_000); 
                 if (snakeBoard.gameEnded()) {
                     break; 
