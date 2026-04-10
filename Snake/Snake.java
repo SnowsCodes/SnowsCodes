@@ -207,7 +207,8 @@ class Board {
         ArrayList<ArrayDeque<Integer>> dirBranches = new ArrayList<>(); 
         // score of -2 = hits wall/self
         // score of -1 = already branched in that direction
-        ArrayList<ArrayList<Integer>> scores = new ArrayList<>(); 
+        // each int[] has a length of 3, with 0 corresponding to turning left, 1 to staying straight, and 2 to turning right
+        ArrayList<int[]> scores = new ArrayList<>(); 
 
         snakeBranches.add(needToBeClonedSnake.clone()); 
         dirBranches.add(new ArrayDeque<Integer>()); 
@@ -218,7 +219,7 @@ class Board {
         while (true) {
             // go through scores and find the best score
             // first val stores corresponding snake
-            // second val stores direction with 0 being turning left, 1 being staying straight, and 2 being turning right
+            // second val stores direction
             int[] bestScore = new int[2]; 
 
             // set the val at best score to -1 (to not explore this branch again)
@@ -233,6 +234,34 @@ class Board {
             // add Snake and corresponding ArrayDeque to snakeBranches and dirBranches (create new snake branch)
             // calculate scores (for going in each direction) for the new snake branch
         }
+    }
+
+    // each score is a linear combination of the Manhattan distance from the apple, the current length of the snake, and whether the snake makes a turn
+    // except when it hits a wall/self, then the score is -2
+    private int[] score(Snake checkSnake, int[] applePos, int length) {
+        int[] score = new int[3]; 
+        // for every direction the snake can go in
+        for (int i = 0; i < 3; i++) {
+            int newDir = (checkSnake.getDir()+i+3) % 4; 
+
+            // calculate the position if the snake goes there
+            int[] newHead; 
+
+            // if the new position overlaps with the snake or crashes into the wall, set the score to -2 and calc next score
+            score[i] = -2; 
+
+            // add score from dist (Manhattan) to apple
+            // (proportional to max distance minus current distance)
+            int calcscore; 
+
+            // add score if it is straight
+            if (i == 1) {
+                calcScore++; 
+            }
+
+            // add score for its length
+        }
+        
     }
 }
 
