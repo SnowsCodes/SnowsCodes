@@ -214,31 +214,84 @@ class Board {
         dirBranches.add(new ArrayDeque<Integer>()); 
 
         // calculate starting scores for each direction
+        scores.add(calcScore(needToBeClonedSnake.clone(), applePos, 0)); 
 
         // while loop :(
         while (true) {
             // go through scores and find the best score
             // first val stores corresponding snake
-            // second val stores direction
-            int[] bestScore = new int[2]; 
+            // second val stores direction (with 0 being left, 1 being straight, 2 being right)
+            int[] bestScore = new int[]{0, 0}; 
+            for (int i = 0; i < scores.size(); i++) {
+                for (int j = 0; j < 3; j++)  {
+                    if (scores.get(i)[j] > scores.get(bestScore[0])[bestScore[1]]) {
+                        bestScore[0] = i; 
+                        bestScore[1] = j; 
+                    }
+                }
+            }
 
             // set the val at best score to -1 (to not explore this branch again)
+            scores.get(bestScore[0])[bestScore[1]] = -1; 
             // create Snake and corresponding ArrayDeque
+            Snake newSnake = snakeBranches.get(bestScore[0]); 
+            ArrayDeque<Integer> newPath = dirBranches.get(bestScore[0]); 
+            // advances snake in the direction determined by the best score
+            int newDir = newSnake.getDir() + bestScore[1] - 1; 
+            newPath.add(newDir); 
+            newSnake.changeDir(newDir); 
+            boolean eatApple = newSnake.next(); 
+
+            // check if other sub-branches are negative numbers
+            boolean deleteParent = true; 
+            for (int i = 0; i < 3; i++) {
+                if (scores.get(bestScore[0])[i] >= 0) {
+                    deleteParent = false; 
+                    break; 
+                }
+            }
+            // if yes, delete the parent snake
+            if (deleteParent) {
+                snakeBranches.remove(bestScore[0]); 
+                dirBranches.remove(bestScore[0]); 
+                scores.remove(bestScore[0]); 
+            }
 
             // check if snake eats apple
             // if yes, check if snake can reach its tail (ugh another pathfinding)
                 // if can reach tail, returns value by modifying pDirs and break
                 // if cannot reach tail continue the while loop (do not add snake to snake lists, equivalent to killing the snake)
+            if (eatApple) {
+                boolean reachesTail = True; 
+                //pathfind to tail
+                // TODO
+
+                //if reach tail
+                if (reachesTail) {
+                    // TODO
+                } else {
+                    continue; 
+                }
+            }
             
             // note: following code runs only if snake does not eat apple
-            // add Snake and corresponding ArrayDeque to snakeBranches and dirBranches (create new snake branch)
             // calculate scores (for going in each direction) for the new snake branch
+            // if at least one score isn't negative, add Snake and corresponding ArrayDeque to snakeBranches and dirBranches (create new snake branch)
+            int[] newScores = calcScore(newSnake, applePos, newPath.size()); 
+            for (int i = 0; i < 3; i++) {
+                if (newScores[i] >= 0) {
+                    snakeBranches.add(newSnake); 
+                    dirBranches.add(newPath); 
+                    scores.add(newScores); 
+                    break; 
+                }
+            }
         }
     }
 
     // each score is a linear combination of the Manhattan distance from the apple, the current length of the snake, and whether the snake makes a turn
     // except when it hits a wall/self, then the score is -2
-    private int[] score(Snake checkSnake, int[] applePos, int length) {
+    private int[] calcScore(Snake checkSnake, int[] applePos, int length) {
         int[] score = new int[3]; 
         // for every direction the snake can go in
         for (int i = 0; i < 3; i++) {
