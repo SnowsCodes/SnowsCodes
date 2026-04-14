@@ -262,13 +262,13 @@ class Board {
                 // if can reach tail, returns value by modifying pDirs and break
                 // if cannot reach tail continue the while loop (do not add snake to snake lists, equivalent to killing the snake)
             if (eatApple) {
-                boolean reachesTail = True; 
-                //pathfind to tail
+                boolean reachesTail;
+                // pathfind to tail
                 // TODO
 
                 //if reach tail
                 if (reachesTail) {
-                    // TODO
+                    pDirs = newPath; 
                 } else {
                     continue; 
                 }
@@ -298,14 +298,38 @@ class Board {
             int newDir = (checkSnake.getDir()+i+3) % 4; 
 
             // calculate the position if the snake goes there
-            int[] newHead; 
+            int[] newHead = checkSnake.getHead(); 
+            newHead[0] += (newDir == 1)? -1 :    // goes up
+                          (newDir == 3)? 1  : 0; // goes down, else do nothing
+            newHead[1] += (newDir == 0)? 1  :    // goes right
+                          (newDir == 2)? -1 : 0; // goes left, else do nothing
 
             // if the new position overlaps with the snake or crashes into the wall, set the score to -2 and calc next score
-            score[i] = -2; 
+            // checks if hit wall
+            boolean hitSomething = (newHead[0] < 0 || newHead[1] < 0 || newHead[0] >= numRow || newHead[1] >= numCol); 
+            // checks if hit self
+            Iterator<int[]> iterSnake = checkSnake.getPos().iterator(); 
+            while (iterSnake.hasNext() && !hitSomething) {
+                int[] snakePart = iterSnake.next(); 
+                // checks that this part isn't the last one
+                if (!iterSnake.hasNext()) {
+                    break; 
+                }
 
+                if (newHead[0] == snakePart[0] && newHead[1] == snakePart[1]) {
+                    hitSomething = true; 
+                }
+            }
+            // sets score
+            if (hitSomething) {
+                score[i] = -2; 
+                continue; 
+            }
+
+            // note: the following code only runs if it does not hit itself or the wall
             // add score from dist (Manhattan) to apple
-            // (proportional to max distance minus current distance)
-            int calcscore; 
+            // proportional to max distance minus current distance, set as 2 times that value currently
+            int calcscore = 2 * ((numRow + numCol) - (Math.abs(newHead[0] - applePos[0]) + Math.abs(newHead[1] - applePos[1]))); 
 
             // add score if it is straight
             if (i == 1) {
@@ -313,6 +337,7 @@ class Board {
             }
 
             // add score for its length
+            // TODO
         }
         
     }
